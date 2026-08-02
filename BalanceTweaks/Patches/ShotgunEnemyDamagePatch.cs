@@ -13,32 +13,32 @@ internal static class ShotgunEnemyDamagePatch
     [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        bool pastDistanceCheck = false;
+        int remainingMatches = 0;
 
         foreach (CodeInstruction ci in instructions)
         {
             if (ci.opcode == OpCodes.Ldc_R4 && Mathf.Approximately((float)ci.operand, 3.7f))
-                pastDistanceCheck = true;
+                remainingMatches = 3;
 
-            if (pastDistanceCheck)
+            if (remainingMatches > 0)
             {
                 if (ci.opcode == OpCodes.Ldc_I4_5)
                 {
                     ci.opcode = OpCodes.Ldc_I4;
                     ci.operand = DamageClose;
-                    pastDistanceCheck = false;
+                    remainingMatches--;
                 }
                 else if (ci.opcode == OpCodes.Ldc_I4_3)
                 {
                     ci.opcode = OpCodes.Ldc_I4;
                     ci.operand = DamageMedium;
-                    pastDistanceCheck = false;
+                    remainingMatches--;
                 }
                 else if (ci.opcode == OpCodes.Ldc_I4_2)
                 {
                     ci.opcode = OpCodes.Ldc_I4;
                     ci.operand = DamageFar;
-                    pastDistanceCheck = false;
+                    remainingMatches--;
                 }
                 else if (ci.opcode == OpCodes.Ldc_I4 && ci.operand is int v && (v == 5 || v == 3 || v == 2))
                 {
@@ -48,7 +48,7 @@ internal static class ShotgunEnemyDamagePatch
                         3 => DamageMedium,
                         _ => DamageFar,
                     };
-                    pastDistanceCheck = false;
+                    remainingMatches--;
                 }
             }
             yield return ci;

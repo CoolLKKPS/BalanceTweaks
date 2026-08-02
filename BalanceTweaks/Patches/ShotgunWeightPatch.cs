@@ -10,7 +10,7 @@ internal static class ShotgunWeightPatch
         {
             if (item.itemName == "Shotgun")
             {
-                item.weight = 1.5f;
+                item.weight = 1.75f;
                 break;
             }
         }

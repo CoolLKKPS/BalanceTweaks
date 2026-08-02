@@ -10,7 +10,7 @@ internal static class AmmoWeightPatch
         {
             if (item.itemName == "Ammo")
             {
-                item.weight = 1.13f;
+                item.weight = 1f;
                 break;
             }
         }
