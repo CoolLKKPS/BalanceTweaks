@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 
@@ -7,10 +8,13 @@ namespace BalanceTweaksPlugin
     [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
     public class BalanceTweaksPlugin : BaseUnityPlugin
     {
+        public static ConfigEntry<bool> CreateNetworkPrefab;
+
         private void Awake()
         {
             Instance = this;
             logger = base.Logger;
+            CreateNetworkPrefab = Config.Bind("General", "CreateNetworkPrefab", false, "");
             harmony.PatchAll();
             Logger.LogInfo("BalanceTweaks is loaded!");
         }
