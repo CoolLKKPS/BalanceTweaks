@@ -16,11 +16,11 @@ namespace BalanceTweaksPlugin
             logger = base.Logger;
             CreateNetworkPrefab = Config.Bind("General", "CreateNetworkPrefab", false, "");
             harmony.PatchAll();
-            Logger.LogInfo("BalanceTweaks is loaded!");
+            Logger.LogInfo("BalanceTweaksForMe is loaded!");
         }
 
-        public const string PLUGIN_GUID = "BalanceTweaks";
-        public const string PLUGIN_NAME = "BalanceTweaks";
+        public const string PLUGIN_GUID = "BalanceTweaksForMe";
+        public const string PLUGIN_NAME = "BalanceTweaksForMe";
         public const string PLUGIN_VERSION = "1.0.0";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
