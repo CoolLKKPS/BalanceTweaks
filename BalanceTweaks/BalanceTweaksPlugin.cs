@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using UnityEngine;
 
 namespace BalanceTweaksPlugin
 {
@@ -12,7 +11,6 @@ namespace BalanceTweaksPlugin
         {
             Instance = this;
             logger = base.Logger;
-            gameObject.hideFlags = HideFlags.HideAndDontSave;
             harmony.PatchAll();
             Logger.LogInfo("BalanceTweaks is loaded!");
         }

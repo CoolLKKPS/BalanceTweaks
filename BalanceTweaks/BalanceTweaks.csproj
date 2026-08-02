@@ -16,6 +16,12 @@
   <PropertyGroup />
   <ItemGroup>
     <Compile Include="BalanceTweaksPlugin.cs" />
+    <Compile Include="Patches\AmmoWeightPatch.cs" />
+    <Compile Include="Patches\KnifeWeightPatch.cs" />
+    <Compile Include="Patches\ShotgunEnemyDamagePatch.cs" />
+    <Compile Include="Patches\ShotgunWeightPatch.cs" />
+    <Compile Include="Patches\ShovelAttackPatch.cs" />
+    <Compile Include="Patches\ShovelWeightPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
