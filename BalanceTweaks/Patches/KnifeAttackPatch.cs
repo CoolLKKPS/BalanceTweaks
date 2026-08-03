@@ -1,22 +1,13 @@
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
 namespace BalanceTweaksPlugin
 {
-    [HarmonyPatch(typeof(Shovel), "HitShovel")]
-    internal static class ShovelAttackPatch
+    [HarmonyPatch(typeof(KnifeItem), "HitKnife")]
+    internal static class KnifeAttackPatch
     {
-        const float OriginalSphereCastRadius = 0.8f;
-        const float SphereCastRadius = 0.75f;
-
-        const float OriginalSphereCastDistance = 1.5f;
-        const float SphereCastDistance = 1.5f;
-
-        const float FloatComparisonEpsilon = 0.0001f;
-
         const int QueryTriggerIgnore = 1;
         const int QueryTriggerUseGlobal = 0;
 
@@ -29,14 +20,6 @@ namespace BalanceTweaksPlugin
             for (int i = 0; i < codes.Count; i++)
             {
                 CodeInstruction ci = codes[i];
-
-                if (ci.opcode == OpCodes.Ldc_R4 && ci.operand is float f)
-                {
-                    if (Math.Abs(f - OriginalSphereCastRadius) < FloatComparisonEpsilon)
-                        ci.operand = SphereCastRadius;
-                    else if (Math.Abs(f - OriginalSphereCastDistance) < FloatComparisonEpsilon)
-                        ci.operand = SphereCastDistance;
-                }
 
                 if (i + 1 < codes.Count
                     && codes[i + 1].opcode == OpCodes.Call

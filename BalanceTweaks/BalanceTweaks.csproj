@@ -18,11 +18,14 @@
     <Compile Include="BalanceTweaksPlugin.cs" />
     <Compile Include="Patches\AmmoWeightPatch.cs" />
     <Compile Include="Patches\KnifeWeightPatch.cs" />
+    <Compile Include="Patches\KnifeAttackPatch.cs" />
+    <Compile Include="Patches\KnifeTriggerPatch.cs" />
     <Compile Include="Patches\ShotgunConductivePatch.cs" />
     <Compile Include="Patches\ShotgunEnemyDamagePatch.cs" />
     <Compile Include="Patches\SlotSwitchCooldownPatch.cs" />
     <Compile Include="Patches\ShotgunWeightPatch.cs" />
     <Compile Include="Patches\ShovelAttackPatch.cs" />
+    <Compile Include="Patches\ShovelTriggerPatch.cs" />
     <Compile Include="Patches\ShovelWeightPatch.cs" />
     <Compile Include="Patches\BeltBagShotgunAmmoPatch.cs" />
     <Compile Include="Patches\NetworkPrefabPatch.cs" />
