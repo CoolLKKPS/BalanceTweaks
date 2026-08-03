@@ -14,6 +14,9 @@ namespace BalanceTweaksPlugin
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            if (!BalanceTweaksPlugin.EnableShovelTriggerHit.Value)
+                return instructions;
+
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {

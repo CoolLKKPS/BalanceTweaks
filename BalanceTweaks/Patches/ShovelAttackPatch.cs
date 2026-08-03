@@ -38,7 +38,8 @@ namespace BalanceTweaksPlugin
                         ci.operand = SphereCastDistance;
                 }
 
-                if (i + 1 < codes.Count
+                if (BalanceTweaksPlugin.EnableShovelLinecastBlock.Value
+                    && i + 1 < codes.Count
                     && codes[i + 1].opcode == OpCodes.Call
                     && codes[i + 1].operand is MethodInfo mi
                     && mi.Name == "Linecast"

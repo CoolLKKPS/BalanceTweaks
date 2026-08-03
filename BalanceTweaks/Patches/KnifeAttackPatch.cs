@@ -21,7 +21,8 @@ namespace BalanceTweaksPlugin
             {
                 CodeInstruction ci = codes[i];
 
-                if (i + 1 < codes.Count
+                if (BalanceTweaksPlugin.EnableKnifeLinecastBlock.Value
+                    && i + 1 < codes.Count
                     && codes[i + 1].opcode == OpCodes.Call
                     && codes[i + 1].operand is MethodInfo mi
                     && mi.Name == "Linecast"
