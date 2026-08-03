@@ -8,6 +8,7 @@ namespace BalanceTweaksPlugin
     [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
     public class BalanceTweaksPlugin : BaseUnityPlugin
     {
+        public static ConfigEntry<bool> EnableShovelNarrowHitbox;
         public static ConfigEntry<bool> EnableShovelTriggerHit;
         public static ConfigEntry<bool> EnableShovelLinecastBlock;
         public static ConfigEntry<bool> EnableKnifeTriggerHit;
@@ -20,6 +21,7 @@ namespace BalanceTweaksPlugin
             logger = base.Logger;
 
             CreateNetworkPrefab = Config.Bind("General", "CreateNetworkPrefab", false, "");
+            EnableShovelNarrowHitbox = Config.Bind("HitDetection", "EnableShovelNarrowHitbox", true, "");
             EnableShovelTriggerHit = Config.Bind("HitDetection", "EnableShovelTriggerHit", true, "");
             EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "");
             EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "");

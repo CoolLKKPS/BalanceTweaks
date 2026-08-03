@@ -30,7 +30,9 @@ namespace BalanceTweaksPlugin
             {
                 CodeInstruction ci = codes[i];
 
-                if (ci.opcode == OpCodes.Ldc_R4 && ci.operand is float f)
+                if (BalanceTweaksPlugin.EnableShovelNarrowHitbox.Value
+                    && ci.opcode == OpCodes.Ldc_R4
+                    && ci.operand is float f)
                 {
                     if (Math.Abs(f - OriginalSphereCastRadius) < FloatComparisonEpsilon)
                         ci.operand = SphereCastRadius;
