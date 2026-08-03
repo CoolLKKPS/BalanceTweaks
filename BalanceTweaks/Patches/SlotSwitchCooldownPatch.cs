@@ -8,6 +8,8 @@ namespace BalanceTweaksPlugin
     [HarmonyPatch(typeof(PlayerControllerB), "ScrollMouse_performed")]
     internal static class BlockScrollSwitchPatch
     {
+        const float KnifeCooldownTime = 0.43f;
+
         private static readonly FieldInfo knifeCooldownField =
             AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
@@ -20,7 +22,7 @@ namespace BalanceTweaksPlugin
                 return false;
             }
             KnifeItem knife = __instance.currentlyHeldObjectServer as KnifeItem;
-            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < 0.43f)
+            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
             {
                 return false;
             }
@@ -31,6 +33,8 @@ namespace BalanceTweaksPlugin
     [HarmonyPatch(typeof(PlayerControllerB), "UseUtilitySlot_performed")]
     internal static class BlockUtilitySlotSwitchPatch
     {
+        const float KnifeCooldownTime = 0.43f;
+
         private static readonly FieldInfo knifeCooldownField =
             AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
@@ -43,7 +47,7 @@ namespace BalanceTweaksPlugin
                 return false;
             }
             KnifeItem knife = __instance.currentlyHeldObjectServer as KnifeItem;
-            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < 0.43f)
+            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
             {
                 return false;
             }
