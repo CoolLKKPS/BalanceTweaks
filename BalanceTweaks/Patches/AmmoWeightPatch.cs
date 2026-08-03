@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin
         [HarmonyPostfix]
         static void ModifyAmmoWeight()
         {
+            if (!BalanceTweaksPlugin.AmmoWeight.Value)
+                return;
+
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 if (item.itemName == "Ammo")

@@ -8,6 +8,12 @@ namespace BalanceTweaksPlugin
         [HarmonyPostfix]
         static void MakeShotgunConductive()
         {
+            if (!BalanceTweaksPlugin.ShotgunConductive.Value)
+                return;
+
+            if (!StartOfRound.Instance.IsHost)
+                return;
+
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 if (item.itemName == "Shotgun")

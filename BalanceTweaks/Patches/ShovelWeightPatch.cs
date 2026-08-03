@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin
         [HarmonyPostfix]
         static void ModifyShovelWeight()
         {
+            if (!BalanceTweaksPlugin.ShovelWeight.Value)
+                return;
+
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 if (item.itemName == "Shovel")

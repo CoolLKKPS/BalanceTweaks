@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin
         [HarmonyPostfix]
         static void ModifyKnifeWeight()
         {
+            if (!BalanceTweaksPlugin.KnifeWeight.Value)
+                return;
+
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 if (item.itemName == "Kitchen knife")

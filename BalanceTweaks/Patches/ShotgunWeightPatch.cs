@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin
         [HarmonyPostfix]
         static void ModifyShotgunWeight()
         {
+            if (!BalanceTweaksPlugin.ShotgunWeight.Value)
+                return;
+
             foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
                 if (item.itemName == "Shotgun")

@@ -1,3 +1,4 @@
+using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -57,6 +58,39 @@ namespace BalanceTweaksPlugin
                     }
                 }
                 yield return ci;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(EnemyAI), "HitEnemyServerRpc")]
+    internal static class ShotgunEnemyDamageSyncPatch
+    {
+        static readonly int[] OriginalDamage = { 5, 3, 2 };
+        static readonly int[] ModdedDamage = { 4, 3, 2 };
+
+        [HarmonyPrefix]
+        static void SyncShotgunDamage(ref int force, int playerWhoHit)
+        {
+            if (!StartOfRound.Instance.IsHost)
+                return;
+
+            if (playerWhoHit < 0 || playerWhoHit >= StartOfRound.Instance.allPlayerScripts.Length)
+                return;
+
+            PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerWhoHit];
+            if (player == null || !(player.currentlyHeldObjectServer is ShotgunItem))
+                return;
+
+            int[] from = BalanceTweaksPlugin.ShotgunEnemyDamage.Value ? OriginalDamage : ModdedDamage;
+            int[] to = BalanceTweaksPlugin.ShotgunEnemyDamage.Value ? ModdedDamage : OriginalDamage;
+
+            for (int i = 0; i < from.Length; i++)
+            {
+                if (force == from[i])
+                {
+                    force = to[i];
+                    break;
+                }
             }
         }
     }
