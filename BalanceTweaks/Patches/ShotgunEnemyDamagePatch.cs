@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(ShotgunItem), "ShootGun")]
     internal static class ShotgunEnemyDamagePatch

@@ -2,7 +2,7 @@ using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(NetworkManager), nameof(NetworkManager.SetSingleton))]
     internal static class NetworkPrefabPatch

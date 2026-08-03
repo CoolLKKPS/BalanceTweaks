@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(Shovel), "HitShovel")]
     internal static class ShovelAttackPatch

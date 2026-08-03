@@ -1,6 +1,6 @@
 using HarmonyLib;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(StartOfRound), "Start")]
     internal static class KnifeWeightPatch

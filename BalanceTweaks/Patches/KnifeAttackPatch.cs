@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(KnifeItem), "HitKnife")]
     internal static class KnifeAttackPatch

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(KnifeItem), "HitKnife")]
     internal static class KnifeTriggerPatch

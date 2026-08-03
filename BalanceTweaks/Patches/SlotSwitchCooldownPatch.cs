@@ -3,7 +3,7 @@ using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(PlayerControllerB), "ScrollMouse_performed")]
     internal static class BlockScrollSwitchPatch

@@ -1,7 +1,7 @@
 using HarmonyLib;
 using Unity.Netcode;
 
-namespace BalanceTweaksPlugin
+namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(BeltBagItem), "TryAddObjectToBagServerRpc")]
     internal static class BeltBagShotgunAmmoPatch
