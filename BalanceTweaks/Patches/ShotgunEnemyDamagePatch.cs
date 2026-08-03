@@ -3,55 +3,61 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
 
-[HarmonyPatch(typeof(ShotgunItem), "ShootGun")]
-internal static class ShotgunEnemyDamagePatch
+namespace BalanceTweaksPlugin
 {
-    const int DamageClose = 3;  // < 3.7m
-    const int DamageMedium = 2;  // 3.7m ~ 6m
-    const int DamageFar = 1;  // > 6m
-
-    [HarmonyTranspiler]
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    [HarmonyPatch(typeof(ShotgunItem), "ShootGun")]
+    internal static class ShotgunEnemyDamagePatch
     {
-        int remainingMatches = 0;
+        const float OriginalRangeThreshold = 3.7f;          // Verify
+        const int OriginalDamageClose = 5;                  // < RangeThreshold
+        const int OriginalDamageMedium = 3;                 // RangeThreshold ~ 6m
+        const int OriginalDamageFar = 2;                    // > 6m
 
-        foreach (CodeInstruction ci in instructions)
+        const int DamageClose = 4;
+        const int DamageMedium = 3;
+        const int DamageFar = 2;
+
+        [HarmonyTranspiler]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            if (ci.opcode == OpCodes.Ldc_R4 && Mathf.Approximately((float)ci.operand, 3.7f))
-                remainingMatches = 3;
+            int remainingMatches = 0;
 
-            if (remainingMatches > 0)
+            foreach (CodeInstruction ci in instructions)
             {
-                if (ci.opcode == OpCodes.Ldc_I4_5)
+                if (ci.opcode == OpCodes.Ldc_R4 && Mathf.Approximately((float)ci.operand, OriginalRangeThreshold))
+                    remainingMatches = 3;
+
+                if (remainingMatches > 0)
                 {
-                    ci.opcode = OpCodes.Ldc_I4;
-                    ci.operand = DamageClose;
-                    remainingMatches--;
-                }
-                else if (ci.opcode == OpCodes.Ldc_I4_3)
-                {
-                    ci.opcode = OpCodes.Ldc_I4;
-                    ci.operand = DamageMedium;
-                    remainingMatches--;
-                }
-                else if (ci.opcode == OpCodes.Ldc_I4_2)
-                {
-                    ci.opcode = OpCodes.Ldc_I4;
-                    ci.operand = DamageFar;
-                    remainingMatches--;
-                }
-                else if (ci.opcode == OpCodes.Ldc_I4 && ci.operand is int v && (v == 5 || v == 3 || v == 2))
-                {
-                    ci.operand = v switch
+                    if (ci.opcode == OpCodes.Ldc_I4_5)
                     {
-                        5 => DamageClose,
-                        3 => DamageMedium,
-                        _ => DamageFar,
-                    };
-                    remainingMatches--;
+                        ci.opcode = OpCodes.Ldc_I4;
+                        ci.operand = DamageClose;
+                        remainingMatches--;
+                    }
+                    else if (ci.opcode == OpCodes.Ldc_I4_3)
+                    {
+                        ci.opcode = OpCodes.Ldc_I4;
+                        ci.operand = DamageMedium;
+                        remainingMatches--;
+                    }
+                    else if (ci.opcode == OpCodes.Ldc_I4_2)
+                    {
+                        ci.opcode = OpCodes.Ldc_I4;
+                        ci.operand = DamageFar;
+                        remainingMatches--;
+                    }
+                    else if (ci.opcode == OpCodes.Ldc_I4 && ci.operand is int v
+                        && (v == OriginalDamageClose || v == OriginalDamageMedium || v == OriginalDamageFar))
+                    {
+                        ci.operand = v == OriginalDamageClose ? DamageClose
+                                   : v == OriginalDamageMedium ? DamageMedium
+                                   : DamageFar;
+                        remainingMatches--;
+                    }
                 }
+                yield return ci;
             }
-            yield return ci;
         }
     }
 }

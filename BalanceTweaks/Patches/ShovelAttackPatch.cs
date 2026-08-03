@@ -2,23 +2,32 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-[HarmonyPatch(typeof(Shovel), "HitShovel")]
-internal static class ShovelAttackPatch
+namespace BalanceTweaksPlugin
 {
-    [HarmonyTranspiler]
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    [HarmonyPatch(typeof(Shovel), "HitShovel")]
+    internal static class ShovelAttackPatch
     {
-        foreach (CodeInstruction instruction in instructions)
+        const float OriginalSphereCastRadius = 0.8f;
+        const float SphereCastRadius = 0.75f;
+
+        const float OriginalSphereCastDistance = 1.5f;
+        const float SphereCastDistance = 1.5f;
+
+        [HarmonyTranspiler]
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 0.8f)
+            foreach (CodeInstruction instruction in instructions)
             {
-                instruction.operand = 0.75f;
+                if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == OriginalSphereCastRadius)
+                {
+                    instruction.operand = SphereCastRadius;
+                }
+                else if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == OriginalSphereCastDistance)
+                {
+                    instruction.operand = SphereCastDistance;
+                }
+                yield return instruction;
             }
-            else if (instruction.opcode == OpCodes.Ldc_R4 && (float)instruction.operand == 1.5f)
-            {
-                instruction.operand = 1.5f;     // v45 is 1.85f
-            }
-            yield return instruction;
         }
     }
 }

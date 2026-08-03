@@ -1,17 +1,20 @@
 using HarmonyLib;
 
-[HarmonyPatch(typeof(StartOfRound), "Start")]
-internal static class AmmoWeightPatch
+namespace BalanceTweaksPlugin
 {
-    [HarmonyPostfix]
-    static void ModifyAmmoWeight()
+    [HarmonyPatch(typeof(StartOfRound), "Start")]
+    internal static class AmmoWeightPatch
     {
-        foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+        [HarmonyPostfix]
+        static void ModifyAmmoWeight()
         {
-            if (item.itemName == "Ammo")
+            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
-                item.weight = 1f;
-                break;
+                if (item.itemName == "Ammo")
+                {
+                    item.weight = 1f;
+                    break;
+                }
             }
         }
     }

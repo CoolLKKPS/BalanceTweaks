@@ -1,6 +1,6 @@
 {
 	"name": "BalanceTweaksForMe",
-	"version_number": "1.0.0",
+	"version_number": "1.0.1",
 	"website_url": "",
 	"description": "A simple plugin that nerfs Shovel, Knife, Shotgun and Ammo",
 	"dependencies": [

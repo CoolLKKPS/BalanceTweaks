@@ -1,17 +1,20 @@
 using HarmonyLib;
 
-[HarmonyPatch(typeof(StartOfRound), "Start")]
-internal static class ShovelWeightPatch
+namespace BalanceTweaksPlugin
 {
-    [HarmonyPostfix]
-    static void ModifyShovelWeight()
+    [HarmonyPatch(typeof(StartOfRound), "Start")]
+    internal static class ShovelWeightPatch
     {
-        foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+        [HarmonyPostfix]
+        static void ModifyShovelWeight()
         {
-            if (item.itemName == "Shovel")
+            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
-                item.weight = 1.18f;
-                break;
+                if (item.itemName == "Shovel")
+                {
+                    item.weight = 1.18f;
+                    break;
+                }
             }
         }
     }

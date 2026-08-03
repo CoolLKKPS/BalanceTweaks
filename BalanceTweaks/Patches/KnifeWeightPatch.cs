@@ -1,17 +1,20 @@
 using HarmonyLib;
 
-[HarmonyPatch(typeof(StartOfRound), "Start")]
-internal static class KnifeWeightPatch
+namespace BalanceTweaksPlugin
 {
-    [HarmonyPostfix]
-    static void ModifyKnifeWeight()
+    [HarmonyPatch(typeof(StartOfRound), "Start")]
+    internal static class KnifeWeightPatch
     {
-        foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
+        [HarmonyPostfix]
+        static void ModifyKnifeWeight()
         {
-            if (item.itemName == "Kitchen knife")
+            foreach (Item item in StartOfRound.Instance.allItemsList.itemsList)
             {
-                item.weight = 1.18f;
-                break;
+                if (item.itemName == "Kitchen knife")
+                {
+                    item.weight = 1.05f;
+                    break;
+                }
             }
         }
     }
