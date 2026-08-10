@@ -6,7 +6,7 @@ namespace BalanceTweaksPlugin.Patches
     internal static class ShotgunWeightPatch
     {
         [HarmonyPostfix]
-        static void ModifyShotgunWeight()
+        private static void ModifyShotgunWeight()
         {
             if (!BalanceTweaksPlugin.ShotgunWeight.Value)
                 return;

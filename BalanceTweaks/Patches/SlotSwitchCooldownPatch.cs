@@ -8,13 +8,13 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(PlayerControllerB), "ScrollMouse_performed")]
     internal static class BlockScrollSwitchPatch
     {
-        const float KnifeCooldownTime = 0.43f;
+        private const float KnifeCooldownTime = 0.43f;
 
         private static readonly FieldInfo knifeCooldownField =
             AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
         [HarmonyPrefix]
-        static bool Prefix(PlayerControllerB __instance)
+        private static bool Prefix(PlayerControllerB __instance)
         {
             Shovel shovel = __instance.currentlyHeldObjectServer as Shovel;
             if (shovel != null && shovel.reelingUp)
@@ -33,13 +33,13 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(PlayerControllerB), "UseUtilitySlot_performed")]
     internal static class BlockUtilitySlotSwitchPatch
     {
-        const float KnifeCooldownTime = 0.43f;
+        private const float KnifeCooldownTime = 0.43f;
 
         private static readonly FieldInfo knifeCooldownField =
             AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
         [HarmonyPrefix]
-        static bool Prefix(PlayerControllerB __instance)
+        private static bool Prefix(PlayerControllerB __instance)
         {
             Shovel shovel = __instance.currentlyHeldObjectServer as Shovel;
             if (shovel != null && shovel.reelingUp)

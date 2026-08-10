@@ -6,7 +6,7 @@ namespace BalanceTweaksPlugin.Patches
     internal static class ShovelWeightPatch
     {
         [HarmonyPostfix]
-        static void ModifyShovelWeight()
+        private static void ModifyShovelWeight()
         {
             if (!BalanceTweaksPlugin.ShovelWeight.Value)
                 return;

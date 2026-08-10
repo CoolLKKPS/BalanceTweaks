@@ -1,8 +1,8 @@
 {
-	"name": "BalanceTweaksForMe",
-	"version_number": "1.0.1",
+	"name": "LKKBalanceTweaks",
+	"version_number": "1.0.2",
 	"website_url": "",
-	"description": "A simple plugin that nerfs Shovel, Knife, Shotgun and Ammo",
+	"description": "A plugin that only nerfs player",
 	"dependencies": [
 		"BepInEx-BepInExPack-5.4.2305"
 	]

@@ -6,7 +6,7 @@ namespace BalanceTweaksPlugin.Patches
     internal static class ShotgunConductivePatch
     {
         [HarmonyPostfix]
-        static void MakeShotgunConductive()
+        private static void MakeShotgunConductive()
         {
             if (!BalanceTweaksPlugin.ShotgunConductive.Value)
                 return;

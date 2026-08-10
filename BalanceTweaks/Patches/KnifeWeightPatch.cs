@@ -6,7 +6,7 @@ namespace BalanceTweaksPlugin.Patches
     internal static class KnifeWeightPatch
     {
         [HarmonyPostfix]
-        static void ModifyKnifeWeight()
+        private static void ModifyKnifeWeight()
         {
             if (!BalanceTweaksPlugin.KnifeWeight.Value)
                 return;

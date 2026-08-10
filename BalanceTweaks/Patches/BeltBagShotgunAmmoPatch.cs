@@ -7,7 +7,7 @@ namespace BalanceTweaksPlugin.Patches
     internal static class BeltBagShotgunAmmoPatch
     {
         [HarmonyPrefix]
-        static bool Prefix(BeltBagItem __instance, NetworkObjectReference netObjectRef, int playerWhoAdded)
+        private static bool Prefix(BeltBagItem __instance, NetworkObjectReference netObjectRef, int playerWhoAdded)
         {
             if (!__instance.IsHost)
                 return true;
@@ -15,8 +15,7 @@ namespace BalanceTweaksPlugin.Patches
             if (!BalanceTweaksPlugin.BeltBagShotgunAmmo.Value)
                 return true;
 
-            NetworkObject networkObject;
-            if (netObjectRef.TryGet(out networkObject, null))
+            if (netObjectRef.TryGet(out NetworkObject networkObject, null))
             {
                 if (networkObject.GetComponent<GrabbableObject>() is GunAmmo)
                 {

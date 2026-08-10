@@ -9,17 +9,17 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(ShotgunItem), "ShootGun")]
     internal static class ShotgunEnemyDamagePatch
     {
-        const float OriginalRangeThreshold = 3.7f;          // Verify
-        const int OriginalDamageClose = 5;                  // < RangeThreshold
-        const int OriginalDamageMedium = 3;                 // RangeThreshold ~ 6m
-        const int OriginalDamageFar = 2;                    // > 6m
+        private const float OriginalRangeThreshold = 3.7f;      // Verify
+        private const int OriginalDamageClose = 5;              // < RangeThreshold
+        private const int OriginalDamageMedium = 3;             // RangeThreshold ~ 6m
+        private const int OriginalDamageFar = 2;                // > 6m
 
-        const int DamageClose = 4;
-        const int DamageMedium = 3;
-        const int DamageFar = 2;
+        private const int DamageClose = 4;
+        private const int DamageMedium = 3;
+        private const int DamageFar = 2;
 
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             int remainingMatches = 0;
 
@@ -65,11 +65,11 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(EnemyAI), "HitEnemyServerRpc")]
     internal static class ShotgunEnemyDamageSyncPatch
     {
-        static readonly int[] OriginalDamage = { 5, 3, 2 };
-        static readonly int[] ModdedDamage = { 4, 3, 2 };
+        private static readonly int[] OriginalDamage = { 5, 3, 2 };
+        private static readonly int[] ModdedDamage = { 4, 3, 2 };
 
         [HarmonyPrefix]
-        static void SyncShotgunDamage(ref int force, int playerWhoHit)
+        private static void SyncShotgunDamage(ref int force, int playerWhoHit)
         {
             if (!StartOfRound.Instance.IsHost)
                 return;

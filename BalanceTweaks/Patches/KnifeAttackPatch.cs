@@ -8,13 +8,13 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(KnifeItem), "HitKnife")]
     internal static class KnifeAttackPatch
     {
-        const int QueryTriggerIgnore = 1;
-        const int QueryTriggerUseGlobal = 0;
+        private const int QueryTriggerIgnore = 1;
+        private const int QueryTriggerUseGlobal = 0;
 
-        const sbyte QueryTriggerIgnore_SByte = 1;
+        private const sbyte QueryTriggerIgnore_SByte = 1;
 
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)

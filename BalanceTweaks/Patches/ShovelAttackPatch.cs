@@ -9,21 +9,21 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(Shovel), "HitShovel")]
     internal static class ShovelAttackPatch
     {
-        const float OriginalSphereCastRadius = 0.8f;
-        const float SphereCastRadius = 0.75f;
+        private const float OriginalSphereCastRadius = 0.8f;
+        private const float SphereCastRadius = 0.75f;
 
-        const float OriginalSphereCastDistance = 1.5f;
-        const float SphereCastDistance = 1.5f;
+        private const float OriginalSphereCastDistance = 1.5f;
+        private const float SphereCastDistance = 1.5f;
 
-        const float FloatComparisonEpsilon = 0.0001f;
+        private const float FloatComparisonEpsilon = 0.0001f;
 
-        const int QueryTriggerIgnore = 1;
-        const int QueryTriggerUseGlobal = 0;
+        private const int QueryTriggerIgnore = 1;
+        private const int QueryTriggerUseGlobal = 0;
 
-        const sbyte QueryTriggerIgnore_SByte = 1;
+        private const sbyte QueryTriggerIgnore_SByte = 1;
 
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)

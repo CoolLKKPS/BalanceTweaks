@@ -9,10 +9,10 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(KnifeItem), "HitKnife")]
     internal static class KnifeTriggerPatch
     {
-        static readonly MethodInfo IsTriggerGetter = AccessTools.PropertyGetter(typeof(Collider), "isTrigger");
+        private static readonly MethodInfo IsTriggerGetter = AccessTools.PropertyGetter(typeof(Collider), "isTrigger");
 
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             if (!BalanceTweaksPlugin.EnableKnifeTriggerHit.Value)
                 return instructions;

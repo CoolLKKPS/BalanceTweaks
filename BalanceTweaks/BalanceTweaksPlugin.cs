@@ -42,15 +42,15 @@ namespace BalanceTweaksPlugin
             EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "");
 
             harmony.PatchAll();
-            Logger.LogInfo("BalanceTweaksForMe is loaded!");
+            Logger.LogInfo("LKKBalanceTweaks is loaded!");
         }
 
-        public const string PLUGIN_GUID = "BalanceTweaksForMe";
-        public const string PLUGIN_NAME = "BalanceTweaksForMe";
-        public const string PLUGIN_VERSION = "1.0.1";
+        public const string PLUGIN_GUID = "LKKBalanceTweaks";
+        public const string PLUGIN_NAME = "LKKBalanceTweaks";
+        public const string PLUGIN_VERSION = "1.0.2";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
-        Harmony harmony = new Harmony(PLUGIN_GUID);
+        private readonly Harmony harmony = new Harmony(PLUGIN_GUID);
 
         public static ManualLogSource logger;
         public static BalanceTweaksPlugin Instance;
