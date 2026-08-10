@@ -1,6 +1,6 @@
-# BalanceTweaksForMe
+# LKKBalanceTweaks
 
-A simple plugin that nerfs Shovel, Knife, Shotgun and Ammo
+A plugin that only nerfs player, only downgrade features configurable
 
 ## Description
 
