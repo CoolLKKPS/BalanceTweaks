@@ -1,3 +1,8 @@
+## v1.0.2
+
+- Flashlight patch
+- Jester patch
+
 ## v1.0.1
 
 - Tweak again

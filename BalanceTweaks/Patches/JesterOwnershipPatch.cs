@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BalanceTweaksPlugin.Patches
 {
-    // This patch doesn't mean to fix ownership issues, it just make sure host authority when host have ownership
+    // This patch doesn't mean to fix main ownership issues, it just make sure owner authority when owner have ownership
     [HarmonyPatch(typeof(JesterAI), "OnCollideWithPlayer")]
     internal static class JesterCollisionPatch
     {

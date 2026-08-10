@@ -12,7 +12,9 @@ Also, you will be a bit more harder to hit the monster, since the hit check be m
 
 Shotgun also have conductive (conductive depends on host), close range only can do 4 dmg to monster;
 
-Flashlight battery below to 1% will trigger UseUpBatteries function which you no longer can have infinite battery flashlight, but only affect you.
+Flashlight battery below to 1% will trigger UseUpBatteries function which you no longer can have infinite battery flashlight, but only affect you;
+
+Jester AI owner now will send kill RPC to target player when collised with target player.
 
 CreateNetworkPrefab will prevent anyone who don't have this mod, and most things are configurable, but for modpack creator, pls try to remove BepInEx configs.
 
