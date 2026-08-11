@@ -16,7 +16,7 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(JesterAI __instance, Collider other)
         {
-            if (!BalanceTweaksPlugin.EnableJesterOwnershipFallback.Value)
+            if (!BalanceTweaksPlugin.CreateNetworkPrefab.Value || !BalanceTweaksPlugin.EnableJesterOwnershipFallback.Value)
                 return;
 
             if (__instance.currentBehaviourStateIndex != 2)
