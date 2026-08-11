@@ -39,7 +39,7 @@ namespace BalanceTweaksPlugin
             EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "Define whether to change shovel linecast queryTriggerInteraction");
             EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "Define whether to allow knife to hit through trigger colliders");
             EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "Define whether to change knife linecast queryTriggerInteraction");
-            EnableJesterOwnershipCorrection = Config.Bind("Jester", "EnableJesterOwnershipCorrection", false, "Define whether to periodically correct Jester ownership");
+            EnableJesterOwnershipCorrection = Config.Bind("Jester", "EnableJesterOwnershipCorrection", true, "Define whether to periodically correct Jester ownership");
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");
@@ -47,7 +47,7 @@ namespace BalanceTweaksPlugin
 
         public const string PLUGIN_GUID = "LKKBalanceTweaks";
         public const string PLUGIN_NAME = "LKKBalanceTweaks";
-        public const string PLUGIN_VERSION = "1.0.3";
+        public const string PLUGIN_VERSION = "1.0.4";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
         private readonly Harmony harmony = new Harmony(PLUGIN_GUID);

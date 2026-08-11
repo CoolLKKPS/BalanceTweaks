@@ -1,16 +1,20 @@
+## v1.0.4
+
+- Vanilla Jester fix again AND again
+
 ## v1.0.3
 
-- Jester fix (let me know if that works)
+- Vanilla Jester fix again (let me know if that works)
 - Config description
 
 ## v1.0.2
 
-- Flashlight patch
-- Jester patch
+- Flashlight fix
+- Vanilla Jester fix
 
 ## v1.0.1
 
-- Tweak again
+- Nerf player again
 
 ## v1.0.0
 

@@ -14,7 +14,7 @@ Shotgun also have conductive (conductive depends on host), close range only can 
 
 Flashlight battery below to 1% will trigger UseUpBatteries function which you no longer can have infinite battery flashlight, but only affect you;
 
-Jester AI owner now will send kill RPC to target player when collised with target player, i also tried to fix jester ownership issues;
+I also tried to fix jester ownership issues;
 
 CreateNetworkPrefab will prevent anyone who don't have this mod, and most things are configurable, but for modpack creator, pls try to remove BepInEx configs.
 
