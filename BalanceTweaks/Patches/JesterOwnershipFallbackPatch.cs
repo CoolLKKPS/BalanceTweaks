@@ -7,7 +7,7 @@ namespace BalanceTweaksPlugin.Patches
 {
     // This patch doesn't mean to fix main ownership issues, it just make sure owner authority when owner have ownership
     [HarmonyPatch(typeof(JesterAI), "OnCollideWithPlayer")]
-    internal static class JesterCollisionPatch
+    internal static class JesterOwnershipFallbackPatch
     {
         private static readonly AccessTools.FieldRef<JesterAI, bool> inKillAnimation = AccessTools.FieldRefAccess<JesterAI, bool>("inKillAnimation");
 
@@ -16,6 +16,9 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(JesterAI __instance, Collider other)
         {
+            if (!BalanceTweaksPlugin.EnableJesterOwnershipFallback.Value)
+                return;
+
             if (__instance.currentBehaviourStateIndex != 2)
                 return;
             if (!__instance.IsOwner)

@@ -12,7 +12,6 @@ namespace BalanceTweaksPlugin
         public static ConfigEntry<bool> ShotgunConductive;
         public static ConfigEntry<bool> ShotgunEnemyDamage;
         public static ConfigEntry<bool> BeltBagShotgunAmmo;
-        public static ConfigEntry<bool> AmmoWeight;
         public static ConfigEntry<bool> ShotgunWeight;
         public static ConfigEntry<bool> ShovelWeight;
         public static ConfigEntry<bool> KnifeWeight;
@@ -21,25 +20,26 @@ namespace BalanceTweaksPlugin
         public static ConfigEntry<bool> EnableShovelLinecastBlock;
         public static ConfigEntry<bool> EnableKnifeTriggerHit;
         public static ConfigEntry<bool> EnableKnifeLinecastBlock;
+        public static ConfigEntry<bool> EnableJesterOwnershipFallback;
 
         private void Awake()
         {
             Instance = this;
             logger = base.Logger;
 
-            CreateNetworkPrefab = Config.Bind("General", "CreateNetworkPrefab", false, "");
-            ShotgunConductive = Config.Bind("General", "ShotgunConductive", true, "");
-            ShotgunEnemyDamage = Config.Bind("General", "ShotgunEnemyDamage", true, "");
-            BeltBagShotgunAmmo = Config.Bind("General", "BeltBagShotgunAmmo", true, "");
-            AmmoWeight = Config.Bind("Balance", "AmmoWeight", false, "");
-            ShotgunWeight = Config.Bind("Balance", "ShotgunWeight", true, "");
-            ShovelWeight = Config.Bind("Balance", "ShovelWeight", true, "");
-            KnifeWeight = Config.Bind("Balance", "KnifeWeight", true, "");
-            EnableShovelNarrowHitbox = Config.Bind("HitDetection", "EnableShovelNarrowHitbox", true, "");
-            EnableShovelTriggerHit = Config.Bind("HitDetection", "EnableShovelTriggerHit", true, "");
-            EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "");
-            EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "");
-            EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "");
+            CreateNetworkPrefab = Config.Bind("General", "CreateNetworkPrefab", false, "Define whether to create a network prefab");
+            ShotgunConductive = Config.Bind("General", "ShotgunConductive", true, "Define whether the shotgun is conductive");
+            ShotgunEnemyDamage = Config.Bind("General", "ShotgunEnemyDamage", true, "Define whether to nerf shotgun damage");
+            BeltBagShotgunAmmo = Config.Bind("General", "BeltBagShotgunAmmo", true, "Define whether the belt bag can't store shotgun ammo");
+            ShotgunWeight = Config.Bind("Balance", "ShotgunWeight", true, "Define whether to modify shotgun weight");
+            ShovelWeight = Config.Bind("Balance", "ShovelWeight", true, "Define whether to modify shovel weight");
+            KnifeWeight = Config.Bind("Balance", "KnifeWeight", true, "Define whether to modify knife weight");
+            EnableShovelNarrowHitbox = Config.Bind("HitDetection", "EnableShovelNarrowHitbox", true, "Define whether to narrow the shovel hit SphereCast radius");
+            EnableShovelTriggerHit = Config.Bind("HitDetection", "EnableShovelTriggerHit", true, "Define whether to allow shovel to hit through trigger colliders");
+            EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "Define whether to change shovel linecast queryTriggerInteraction");
+            EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "Define whether to allow knife to hit through trigger colliders");
+            EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "Define whether to change knife linecast queryTriggerInteraction");
+            EnableJesterOwnershipFallback = Config.Bind("Jester", "EnableJesterOwnershipFallback", false, "Define whether to enable Jester fallback kill path");
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");
@@ -47,7 +47,7 @@ namespace BalanceTweaksPlugin
 
         public const string PLUGIN_GUID = "LKKBalanceTweaks";
         public const string PLUGIN_NAME = "LKKBalanceTweaks";
-        public const string PLUGIN_VERSION = "1.0.2";
+        public const string PLUGIN_VERSION = "1.0.3";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
         private readonly Harmony harmony = new Harmony(PLUGIN_GUID);
