@@ -20,7 +20,7 @@ namespace BalanceTweaksPlugin
         public static ConfigEntry<bool> EnableShovelLinecastBlock;
         public static ConfigEntry<bool> EnableKnifeTriggerHit;
         public static ConfigEntry<bool> EnableKnifeLinecastBlock;
-        public static ConfigEntry<bool> EnableJesterOwnershipFallback;
+        public static ConfigEntry<bool> EnableJesterOwnershipCorrection;
 
         private void Awake()
         {
@@ -39,7 +39,7 @@ namespace BalanceTweaksPlugin
             EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "Define whether to change shovel linecast queryTriggerInteraction");
             EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "Define whether to allow knife to hit through trigger colliders");
             EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "Define whether to change knife linecast queryTriggerInteraction");
-            EnableJesterOwnershipFallback = Config.Bind("Jester", "EnableJesterOwnershipFallback", false, "Define whether to enable Jester fallback kill path");
+            EnableJesterOwnershipCorrection = Config.Bind("Jester", "EnableJesterOwnershipCorrection", false, "Define whether to periodically correct Jester ownership");
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");

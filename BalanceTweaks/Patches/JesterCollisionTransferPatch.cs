@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace BalanceTweaksPlugin.Patches
 {
-    // This patch doesn't mean to fix main ownership issues, it just make sure owner authority when owner have ownership
     [HarmonyPatch(typeof(JesterAI), "OnCollideWithPlayer")]
-    internal static class JesterOwnershipFallbackPatch
+    internal static class JesterCollisionTransferPatch
     {
         private static readonly AccessTools.FieldRef<JesterAI, bool> inKillAnimation = AccessTools.FieldRefAccess<JesterAI, bool>("inKillAnimation");
 
@@ -16,9 +15,6 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(JesterAI __instance, Collider other)
         {
-            if (!BalanceTweaksPlugin.CreateNetworkPrefab.Value || !BalanceTweaksPlugin.EnableJesterOwnershipFallback.Value)
-                return;
-
             if (__instance.currentBehaviourStateIndex != 2)
                 return;
             if (!__instance.IsOwner)
@@ -32,7 +28,7 @@ namespace BalanceTweaksPlugin.Patches
             PlayerControllerB player = other?.GetComponent<PlayerControllerB>();
             if (player == null)
                 return;
-            if (player != __instance.targetPlayer)
+            if (player == GameNetworkManager.Instance.localPlayerController)
                 return;
             if (inKillAnimation(__instance))
                 return;
@@ -44,7 +40,7 @@ namespace BalanceTweaksPlugin.Patches
             if ((bool)isSeparatedByMineshaftElevator.Invoke(__instance, new object[] { player.transform.position }))
                 return;
 
-            __instance.KillPlayerServerRpc((int)player.playerClientId);
+            __instance.ChangeOwnershipOfEnemy(player.actualClientId);
         }
     }
 }
