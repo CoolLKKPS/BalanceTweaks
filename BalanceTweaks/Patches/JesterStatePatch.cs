@@ -3,7 +3,7 @@ using HarmonyLib;
 namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.SwitchToBehaviourState))]
-    internal static class JesterStateTransitionPatch
+    internal static class JesterStatePatch
     {
         [HarmonyPostfix]
         private static void Postfix(EnemyAI __instance, int stateIndex)

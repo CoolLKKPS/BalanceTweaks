@@ -32,5 +32,8 @@
     <Reference Include="UnityEngine.PhysicsModule.dll">
       <HintPath>D:\SteamLibrary\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
