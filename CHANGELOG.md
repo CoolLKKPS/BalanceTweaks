@@ -1,3 +1,7 @@
+## v1.0.5
+
+- WalkingStaminaPatch
+
 ## v1.0.4
 
 - Vanilla Jester fix again AND again
