@@ -21,6 +21,9 @@ namespace BalanceTweaksPlugin.Patches
             if (__instance.isSprinting)
                 return;
 
+            if (__instance.isCrouching)
+                return;
+
             if (__instance.isMovementHindered > 0)
                 return;
 
@@ -37,8 +40,7 @@ namespace BalanceTweaksPlugin.Patches
             float sprintTime = __instance.sprintTime;
             float carryWeight = __instance.carryWeight;
 
-            float walkDrainMultiplier = __instance.isCrouching ? 0f : 0.05f;
-            // float walkDrainMultiplier = 0f;
+            float walkDrainMultiplier = 0.25f;
 
             float vanillaRegenAmount = deltaTime / (sprintTime + 9f) * drunknessMultiplier;
             float drainAmount = deltaTime / sprintTime * carryWeight * drunknessMultiplier * walkDrainMultiplier;
