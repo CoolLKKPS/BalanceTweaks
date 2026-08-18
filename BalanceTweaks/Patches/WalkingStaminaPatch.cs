@@ -12,41 +12,44 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
         {
+            __instance.sprintMeter = GetEffectiveSprintMeter(__instance);
+        }
+
+        internal static float GetEffectiveSprintMeter(PlayerControllerB player)
+        {
             if (!BalanceTweaksPlugin.EnableWalkDrainsStamina.Value)
-                return;
+                return player.sprintMeter;
 
-            if (!__instance.IsOwner)
-                return;
+            if (!player.IsOwner)
+                return player.sprintMeter;
 
-            if (__instance.isSprinting)
-                return;
+            if (player.isSprinting)
+                return player.sprintMeter;
 
-            if (__instance.isCrouching)
-                return;
+            if (player.isCrouching)
+                return player.sprintMeter;
 
-            if (__instance.isMovementHindered > 0)
-                return;
+            if (player.isMovementHindered > 0)
+                return player.sprintMeter;
 
-            if (!isWalking(__instance))
-                return;
+            if (!isWalking(player))
+                return player.sprintMeter;
 
             float drunknessMultiplier = 1f;
-            if (__instance.drunkness > 0.02f)
+            if (player.drunkness > 0.02f)
             {
-                drunknessMultiplier *= Mathf.Abs(StartOfRound.Instance.drunknessSpeedEffect.Evaluate(__instance.drunkness) - 1.25f);
+                drunknessMultiplier *= Mathf.Abs(StartOfRound.Instance.drunknessSpeedEffect.Evaluate(player.drunkness) - 1.25f);
             }
 
             float deltaTime = Time.deltaTime;
-            float sprintTime = __instance.sprintTime;
-            float carryWeight = __instance.carryWeight;
 
             float walkDrainMultiplier = 0.25f;
 
-            float vanillaRegenAmount = deltaTime / (sprintTime + 9f) * drunknessMultiplier;
-            float drainAmount = deltaTime / sprintTime * carryWeight * drunknessMultiplier * walkDrainMultiplier;
+            float vanillaRegenAmount = deltaTime / (player.sprintTime + 9f) * drunknessMultiplier;
+            float drainAmount = deltaTime / player.sprintTime * player.carryWeight * drunknessMultiplier * walkDrainMultiplier;
 
             // First delete all vanilla regen, then apply the drain amount.
-            __instance.sprintMeter = Mathf.Clamp(__instance.sprintMeter - vanillaRegenAmount - drainAmount, 0f, 1f);
+            return Mathf.Clamp(player.sprintMeter - vanillaRegenAmount - drainAmount, 0f, 1f);
         }
     }
 }
