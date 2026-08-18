@@ -8,7 +8,7 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(PlayerControllerB), "Update")]
     internal static class ExhaustionHealthDrainPatch
     {
-        private const float DrainInterval = 0.5f;
+        private const float DrainInterval = 1f;
 
         private const int DrainAmount = 2;
 
