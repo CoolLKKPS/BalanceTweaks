@@ -1,3 +1,7 @@
+## v1.0.6
+
+- ExhaustionHealthDrainPatch AND InteractDiscardCooldownPatch
+
 ## v1.0.5
 
 - WalkingStaminaPatch

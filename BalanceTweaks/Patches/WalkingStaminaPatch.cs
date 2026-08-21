@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin.Patches
     internal static class WalkingStaminaPatch
     {
         private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
+        internal static float stressTimer;
+        internal static float stressChargeThreshold;
+        internal static float SecondsToFullStress;
 
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
@@ -20,7 +23,12 @@ namespace BalanceTweaksPlugin.Patches
             if (!BalanceTweaksPlugin.EnableWalkDrainsStamina.Value)
                 return player.sprintMeter;
 
-            if (!player.IsOwner)
+            if (player != GameNetworkManager.Instance.localPlayerController)
+                return player.sprintMeter;
+
+            UpdateStressTimer(player);
+
+            if (player.insanityLevel <= 0f)
                 return player.sprintMeter;
 
             if (player.isSprinting)
@@ -43,13 +51,47 @@ namespace BalanceTweaksPlugin.Patches
 
             float deltaTime = Time.deltaTime;
 
-            float walkDrainMultiplier = 0.25f;
+            float walkDrainMultiplier = stressTimer * 0.25f;
 
+            // Vanilla things
             float vanillaRegenAmount = deltaTime / (player.sprintTime + 9f) * drunknessMultiplier;
             float drainAmount = deltaTime / player.sprintTime * player.carryWeight * drunknessMultiplier * walkDrainMultiplier;
 
-            // First delete all vanilla regen, then apply the drain amount.
-            return Mathf.Clamp(player.sprintMeter - vanillaRegenAmount - drainAmount, 0f, 1f);
+            float regenFactor = Mathf.Clamp01(stressTimer / 0.5f);
+            float drainFactor = Mathf.InverseLerp(0.5f, 1f, stressTimer);
+            float effectiveDrain = drainAmount * drainFactor;
+
+            // The result
+            return Mathf.Clamp(player.sprintMeter - (vanillaRegenAmount * regenFactor) - effectiveDrain, 0f, 1f);
+        }
+
+        private static void UpdateStressTimer(PlayerControllerB player)
+        {
+            // 50 x 0.1 = 5, the base we start stress things
+            stressChargeThreshold = player.maxInsanityLevel * 0.1f;
+
+            SecondsToFullStress = StartOfRound.Instance.connectedPlayersAmount == 0 ? 540f : 480f;
+
+            if (StartOfRound.Instance.inShipPhase)
+            {
+                stressTimer = 0f;
+                return;
+            }
+
+            if (player.insanityLevel > stressChargeThreshold)
+            {
+                // (insanityLevel / (50 - stressChargeThreshold)) / SecondsToFullStress
+                float chargePerSecond = Mathf.InverseLerp(stressChargeThreshold, player.maxInsanityLevel, player.insanityLevel) / SecondsToFullStress;
+                // No frame related
+                stressTimer += Time.deltaTime * chargePerSecond;
+            }
+
+            if (StartOfRound.Instance.fearLevel > 0f)
+            {
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0075f;
+            }
+
+            stressTimer = Mathf.Clamp(stressTimer, 0f, 1f);
         }
     }
 }

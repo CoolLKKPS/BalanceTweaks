@@ -25,9 +25,6 @@ namespace BalanceTweaksPlugin.Patches
             if (!BalanceTweaksPlugin.EnableExhaustionHealthDrain.Value)
                 return;
 
-            if (!__instance.IsOwner)
-                return;
-
             if (__instance != GameNetworkManager.Instance.localPlayerController)
                 return;
 

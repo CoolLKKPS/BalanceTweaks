@@ -49,6 +49,9 @@ namespace BalanceTweaksPlugin
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");
+#if DEBUG
+            gameObject.AddComponent<DebugTools.StressTimerDebugUI>();
+#endif
         }
 
         public const string PLUGIN_GUID = "LKKBalanceTweaks";
