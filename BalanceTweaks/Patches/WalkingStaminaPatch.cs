@@ -11,6 +11,7 @@ namespace BalanceTweaksPlugin.Patches
         internal static float stressTimer;
         internal static float stressChargeThreshold;
         internal static float SecondsToFullStress;
+        internal static float pendingDamageTaken;
 
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
@@ -65,26 +66,42 @@ namespace BalanceTweaksPlugin.Patches
             return Mathf.Clamp(player.sprintMeter - (vanillaRegenAmount * regenFactor) - effectiveDrain, 0f, 1f);
         }
 
+        [HarmonyPatch(typeof(PlayerControllerB), "DamagePlayer")]
+        internal static class DamageTakenStressPatch
+        {
+            [HarmonyPostfix]
+            private static void Postfix(PlayerControllerB __instance, int damageNumber)
+            {
+                if (__instance != GameNetworkManager.Instance.localPlayerController)
+                {
+                    return;
+                }
+
+                WalkingStaminaPatch.pendingDamageTaken += damageNumber;
+            }
+        }
+
         private static void UpdateStressTimer(PlayerControllerB player)
         {
-            // 50 x 0.1 = 5, the base we start stress things
-            stressChargeThreshold = player.maxInsanityLevel * 0.1f;
+            // 50 x 0.02 = 1, the base we start stress things
+            stressChargeThreshold = player.maxInsanityLevel * 0.02f;
 
             if (StartOfRound.Instance.connectedPlayersAmount == 0)
             {
-                SecondsToFullStress = 540f;
+                SecondsToFullStress = 270f;
             }
             else
             {
                 int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
                 int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
                 float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
-                SecondsToFullStress = Mathf.Lerp(360f, 900f, Mathf.Clamp01(alivePercent));
+                SecondsToFullStress = Mathf.Lerp(210f, 540f, Mathf.Clamp01(alivePercent));
             }
 
             if (StartOfRound.Instance.inShipPhase)
             {
                 stressTimer = 0f;
+                pendingDamageTaken = 0f;
                 return;
             }
 
@@ -99,6 +116,12 @@ namespace BalanceTweaksPlugin.Patches
             if (StartOfRound.Instance.fearLevel > 0f)
             {
                 stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.001f;
+            }
+
+            if (pendingDamageTaken > 0f)
+            {
+                stressTimer += pendingDamageTaken * 0.002f;
+                pendingDamageTaken = 0f;
             }
 
             stressTimer = Mathf.Clamp(stressTimer, 0f, 1f);
