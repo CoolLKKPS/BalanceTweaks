@@ -70,7 +70,17 @@ namespace BalanceTweaksPlugin.Patches
             // 50 x 0.1 = 5, the base we start stress things
             stressChargeThreshold = player.maxInsanityLevel * 0.1f;
 
-            SecondsToFullStress = StartOfRound.Instance.connectedPlayersAmount == 0 ? 540f : 480f;
+            if (StartOfRound.Instance.connectedPlayersAmount == 0)
+            {
+                SecondsToFullStress = 540f;
+            }
+            else
+            {
+                int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
+                int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
+                float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
+                SecondsToFullStress = Mathf.Lerp(360f, 900f, Mathf.Clamp01(alivePercent));
+            }
 
             if (StartOfRound.Instance.inShipPhase)
             {
@@ -88,7 +98,7 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0075f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.001f;
             }
 
             stressTimer = Mathf.Clamp(stressTimer, 0f, 1f);
