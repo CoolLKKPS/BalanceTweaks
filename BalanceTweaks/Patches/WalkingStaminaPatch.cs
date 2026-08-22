@@ -88,14 +88,14 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.connectedPlayersAmount == 0)
             {
-                SecondsToFullStress = 270f;
+                SecondsToFullStress = 240f;
             }
             else
             {
                 int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
                 int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
                 float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
-                SecondsToFullStress = Mathf.Lerp(210f, 540f, Mathf.Clamp01(alivePercent));
+                SecondsToFullStress = Mathf.Lerp(180f, 360f, Mathf.Clamp01(alivePercent));
             }
 
             if (StartOfRound.Instance.inShipPhase)
@@ -109,13 +109,12 @@ namespace BalanceTweaksPlugin.Patches
             {
                 // (insanityLevel / (50 - stressChargeThreshold)) / SecondsToFullStress
                 float chargePerSecond = Mathf.InverseLerp(stressChargeThreshold, player.maxInsanityLevel, player.insanityLevel) / SecondsToFullStress;
-                // No frame related
                 stressTimer += Time.deltaTime * chargePerSecond;
             }
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.001f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.002f;
             }
 
             if (pendingDamageTaken > 0f)
