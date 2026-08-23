@@ -52,7 +52,7 @@ namespace BalanceTweaksPlugin.Patches
 
             float deltaTime = Time.deltaTime;
 
-            float walkDrainMultiplier = stressTimer * 0.25f;
+            float walkDrainMultiplier = stressTimer * 0.3f;
 
             // Vanilla things
             float vanillaRegenAmount = deltaTime / (player.sprintTime + 9f) * drunknessMultiplier;
@@ -88,14 +88,14 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.connectedPlayersAmount == 0)
             {
-                SecondsToFullStress = 240f;
+                SecondsToFullStress = 1080f;
             }
             else
             {
                 int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
                 int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
                 float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
-                SecondsToFullStress = Mathf.Lerp(180f, 360f, Mathf.Clamp01(alivePercent));
+                SecondsToFullStress = Mathf.Lerp(945f, 1418f, Mathf.Clamp01(alivePercent));
             }
 
             if (StartOfRound.Instance.inShipPhase)
@@ -114,12 +114,12 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.002f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0015f;
             }
 
             if (pendingDamageTaken > 0f)
             {
-                stressTimer += pendingDamageTaken * 0.002f;
+                stressTimer += pendingDamageTaken * 0.004f;
                 pendingDamageTaken = 0f;
             }
 
