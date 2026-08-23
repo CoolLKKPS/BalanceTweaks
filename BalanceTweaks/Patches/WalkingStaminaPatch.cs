@@ -83,19 +83,18 @@ namespace BalanceTweaksPlugin.Patches
 
         private static void UpdateStressTimer(PlayerControllerB player)
         {
-            // 50 x 0.02 = 1, the base we start stress things
-            stressChargeThreshold = player.maxInsanityLevel * 0.02f;
-
             if (StartOfRound.Instance.connectedPlayersAmount == 0)
             {
+                stressChargeThreshold = player.maxInsanityLevel * 0.02f;
                 SecondsToFullStress = 1080f;
             }
             else
             {
+                stressChargeThreshold = player.maxInsanityLevel * 0.04f;
                 int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
                 int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
                 float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
-                SecondsToFullStress = Mathf.Lerp(945f, 1418f, Mathf.Clamp01(alivePercent));
+                SecondsToFullStress = Mathf.Lerp(1050f, 1580f, Mathf.Clamp01(alivePercent));
             }
 
             if (StartOfRound.Instance.inShipPhase)
