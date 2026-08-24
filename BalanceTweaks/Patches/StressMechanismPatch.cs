@@ -83,6 +83,8 @@ namespace BalanceTweaksPlugin.Patches
 
         private static void UpdateStressTimer(PlayerControllerB player)
         {
+            if (player.isPlayerDead)
+                return;
             if (StartOfRound.Instance.connectedPlayersAmount == 0)
             {
                 stressChargeThreshold = player.maxInsanityLevel * 0.02f;
@@ -113,7 +115,7 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0015f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.00175f;
             }
 
             if (pendingDamageTaken > 0f)
