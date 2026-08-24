@@ -22,8 +22,8 @@ namespace BalanceTweaksPlugin
         public static ConfigEntry<bool> EnableKnifeTriggerHit;
         public static ConfigEntry<bool> EnableKnifeLinecastBlock;
         public static ConfigEntry<bool> EnableJesterOwnershipCorrection;
-        public static ConfigEntry<bool> EnableWalkDrainsStamina;
-        public static ConfigEntry<bool> EnableExhaustionHealthDrain;
+        public static ConfigEntry<bool> EnableStressMechanism;
+        public static ConfigEntry<bool> EnableStressHealthDrain;
 
         private void Awake()
         {
@@ -37,15 +37,15 @@ namespace BalanceTweaksPlugin
             ShotgunWeight = Config.Bind("Balance", "ShotgunWeight", true, "Define whether to modify shotgun weight");
             ShovelWeight = Config.Bind("Balance", "ShovelWeight", true, "Define whether to modify shovel weight");
             KnifeWeight = Config.Bind("Balance", "KnifeWeight", true, "Define whether to modify knife weight");
-            EnableInteractDiscardBlock = Config.Bind("Balance", "EnableInteractDiscardBlock", false, "Define whether to block interacting and discarding during shovel reel-up or knife cooldown");
+            EnableInteractDiscardBlock = Config.Bind("Balance", "EnableInteractDiscardBlock", true, "Define whether to block interacting and discarding during shovel reel-up or knife cooldown");
             EnableShovelNarrowHitbox = Config.Bind("HitDetection", "EnableShovelNarrowHitbox", true, "Define whether to narrow the shovel hit SphereCast radius");
             EnableShovelTriggerHit = Config.Bind("HitDetection", "EnableShovelTriggerHit", true, "Define whether to allow shovel to hit through trigger colliders");
             EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "Define whether to change shovel linecast queryTriggerInteraction");
             EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "Define whether to allow knife to hit through trigger colliders");
             EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "Define whether to change knife linecast queryTriggerInteraction");
             EnableJesterOwnershipCorrection = Config.Bind("Jester", "EnableJesterOwnershipCorrection", true, "Define whether to periodically correct Jester ownership");
-            EnableWalkDrainsStamina = Config.Bind("Stamina", "EnableWalkDrainsStamina", false, "Define whether walking drains stamina instead of regenerating it");
-            EnableExhaustionHealthDrain = Config.Bind("Stamina", "EnableExhaustionHealthDrain", false, "Define whether health drains while stamina is fully depleted");
+            EnableStressMechanism = Config.Bind("Stress", "EnableStressMechanism", true, "Define whether to enable stress mechanism");
+            EnableStressHealthDrain = Config.Bind("Stress", "EnableStressHealthDrain", true, "Define whether to enable stress health drain");
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");
@@ -56,7 +56,7 @@ namespace BalanceTweaksPlugin
 
         public const string PLUGIN_GUID = "LKKBalanceTweaks";
         public const string PLUGIN_NAME = "LKKBalanceTweaks";
-        public const string PLUGIN_VERSION = "1.0.5";
+        public const string PLUGIN_VERSION = "1.0.6";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
         private readonly Harmony harmony = new Harmony(PLUGIN_GUID);

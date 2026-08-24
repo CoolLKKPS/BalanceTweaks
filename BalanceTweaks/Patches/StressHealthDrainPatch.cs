@@ -6,11 +6,11 @@ using UnityEngine;
 namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(PlayerControllerB), "Update")]
-    internal static class ExhaustionHealthDrainPatch
+    internal static class StressHealthDrainPatch
     {
-        private const float DrainInterval = 1f;
+        private const float DrainInterval = 0.5f;
 
-        private const int DrainAmount = 2;
+        private const int DrainAmount = 5;
 
         private static readonly ConditionalWeakTable<PlayerControllerB, DrainState> drainStates = new ConditionalWeakTable<PlayerControllerB, DrainState>();
 
@@ -22,7 +22,7 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
         {
-            if (!BalanceTweaksPlugin.EnableExhaustionHealthDrain.Value)
+            if (!BalanceTweaksPlugin.EnableStressHealthDrain.Value)
                 return;
 
             if (__instance != GameNetworkManager.Instance.localPlayerController)
@@ -30,7 +30,7 @@ namespace BalanceTweaksPlugin.Patches
 
             DrainState state = drainStates.GetOrCreateValue(__instance);
 
-            float effectiveMeter = WalkingStaminaPatch.GetEffectiveSprintMeter(__instance);
+            float effectiveMeter = StressMechanismPatch.GetEffectiveSprintMeter(__instance);
 
             if (effectiveMeter > 0f || __instance.isPlayerDead)
             {

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BalanceTweaksPlugin.Patches
 {
     [HarmonyPatch(typeof(PlayerControllerB), "Update")]
-    internal static class WalkingStaminaPatch
+    internal static class StressMechanismPatch
     {
         private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
         internal static float stressTimer;
@@ -21,7 +21,7 @@ namespace BalanceTweaksPlugin.Patches
 
         internal static float GetEffectiveSprintMeter(PlayerControllerB player)
         {
-            if (!BalanceTweaksPlugin.EnableWalkDrainsStamina.Value)
+            if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
                 return player.sprintMeter;
 
             if (player != GameNetworkManager.Instance.localPlayerController)
@@ -77,7 +77,7 @@ namespace BalanceTweaksPlugin.Patches
                     return;
                 }
 
-                WalkingStaminaPatch.pendingDamageTaken += damageNumber;
+                StressMechanismPatch.pendingDamageTaken += damageNumber;
             }
         }
 

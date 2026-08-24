@@ -1,6 +1,6 @@
 ## v1.0.6
 
-- ExhaustionHealthDrainPatch AND InteractDiscardCooldownPatch
+- Stress mechanism AND InteractDiscardCooldownPatch
 
 ## v1.0.5
 

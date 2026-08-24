@@ -109,15 +109,15 @@ namespace BalanceTweaksPlugin.DebugTools
                 ? GameNetworkManager.Instance.localPlayerController
                 : null;
 
-            float stress = WalkingStaminaPatch.stressTimer;
-            float threshold = WalkingStaminaPatch.stressChargeThreshold;
+            float stress = StressMechanismPatch.stressTimer;
+            float threshold = StressMechanismPatch.stressChargeThreshold;
             float insanity = localPlayer != null ? localPlayer.insanityLevel : 0f;
             float maxInsanity = localPlayer != null ? localPlayer.maxInsanityLevel : 0f;
             bool inShip = StartOfRound.Instance != null && StartOfRound.Instance.inShipPhase;
-            bool modEnabled = BalanceTweaksPlugin.EnableWalkDrainsStamina.Value;
+            bool modEnabled = BalanceTweaksPlugin.EnableStressMechanism.Value;
             bool charging = insanity > threshold;
 
-            float ratePerSecond = charging ? Mathf.InverseLerp(threshold, maxInsanity, insanity) / WalkingStaminaPatch.SecondsToFullStress : 0f;
+            float ratePerSecond = charging ? Mathf.InverseLerp(threshold, maxInsanity, insanity) / StressMechanismPatch.SecondsToFullStress : 0f;
 
             stressText.text = string.Format(
                 "Stress      {0,4:0.00} / 1.00\n" +
