@@ -1,5 +1,5 @@
 # LKKBalanceTweaks
-A plugin that only nerfs player, only downgrade features configurable.
+A plugin that only nerfs player, only downgrade features configurable
 
 ## Description
 Currently, Shovel have ~19 lb, Knife have ~5 lb, Shotgun have ~21 lb;<br>

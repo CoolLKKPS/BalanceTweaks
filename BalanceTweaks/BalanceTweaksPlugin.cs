@@ -37,7 +37,7 @@ namespace BalanceTweaksPlugin
             ShotgunWeight = Config.Bind("Balance", "ShotgunWeight", true, "Define whether to modify shotgun weight");
             ShovelWeight = Config.Bind("Balance", "ShovelWeight", true, "Define whether to modify shovel weight");
             KnifeWeight = Config.Bind("Balance", "KnifeWeight", true, "Define whether to modify knife weight");
-            EnableInteractDiscardBlock = Config.Bind("Balance", "EnableInteractDiscardBlock", true, "Define whether to block interacting and discarding during shovel reel-up or knife cooldown");
+            EnableInteractDiscardBlock = Config.Bind("Balance", "EnableInteractDiscardBlock", false, "Define whether to block interacting and discarding during shovel reel-up or knife cooldown");
             EnableShovelNarrowHitbox = Config.Bind("HitDetection", "EnableShovelNarrowHitbox", true, "Define whether to narrow the shovel hit SphereCast radius");
             EnableShovelTriggerHit = Config.Bind("HitDetection", "EnableShovelTriggerHit", true, "Define whether to allow shovel to hit through trigger colliders");
             EnableShovelLinecastBlock = Config.Bind("HitDetection", "EnableShovelLinecastBlock", true, "Define whether to change shovel linecast queryTriggerInteraction");

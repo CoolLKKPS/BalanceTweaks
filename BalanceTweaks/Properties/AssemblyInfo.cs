@@ -2,7 +2,7 @@
 
 [assembly: AssemblyVersion(BalanceTweaksPlugin.BalanceTweaksPlugin.PLUGIN_VERSION_FULL)]
 [assembly: AssemblyCompany(BalanceTweaksPlugin.BalanceTweaksPlugin.PLUGIN_NAME)]
-[assembly: AssemblyDescription("BalanceTweaks")]
+[assembly: AssemblyDescription("A plugin that only nerfs player, only downgrade features configurable")]
 [assembly: AssemblyFileVersion(BalanceTweaksPlugin.BalanceTweaksPlugin.PLUGIN_VERSION_FULL)]
 [assembly: AssemblyInformationalVersion(BalanceTweaksPlugin.BalanceTweaksPlugin.PLUGIN_VERSION)]
 [assembly: AssemblyProduct(BalanceTweaksPlugin.BalanceTweaksPlugin.PLUGIN_NAME)]
