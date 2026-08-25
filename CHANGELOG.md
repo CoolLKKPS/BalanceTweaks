@@ -1,3 +1,7 @@
+## v1.0.7
+
+- I forgot the icon changed
+
 ## v1.0.6
 
 - Stress mechanism AND InteractDiscardCooldownPatch
