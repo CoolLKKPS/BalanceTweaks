@@ -115,7 +115,7 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.00175f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0016f;
             }
 
             if (pendingDamageTaken > 0f)
