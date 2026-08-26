@@ -12,6 +12,9 @@ namespace BalanceTweaksPlugin.Patches
         internal static float stressChargeThreshold;
         internal static float SecondsToFullStress;
         internal static float pendingDamageTaken;
+        internal static int otherTotal;
+        internal static int otherAlive;
+        internal static float alivePercent;
 
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
@@ -85,18 +88,26 @@ namespace BalanceTweaksPlugin.Patches
         {
             if (player.isPlayerDead)
                 return;
-            if (StartOfRound.Instance.connectedPlayersAmount == 0)
+
+            otherTotal = StartOfRound.Instance.connectedPlayersAmount;
+            otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
+            alivePercent = otherTotal > 0 ? Mathf.Clamp01((float)otherAlive / otherTotal) : 0f;
+            float fearMultiplier;
+            float damageMultiplier;
+
+            if (otherTotal == 0)
             {
                 stressChargeThreshold = player.maxInsanityLevel * 0.02f;
                 SecondsToFullStress = 1080f;
+                fearMultiplier = 0.0014f;
+                damageMultiplier = 0.004f;
             }
             else
             {
                 stressChargeThreshold = player.maxInsanityLevel * 0.04f;
-                int otherTotal = StartOfRound.Instance.connectedPlayersAmount;
-                int otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
-                float alivePercent = otherTotal > 0 ? (float)otherAlive / otherTotal : 0f;
-                SecondsToFullStress = Mathf.Lerp(1050f, 1580f, Mathf.Clamp01(alivePercent));
+                SecondsToFullStress = Mathf.Lerp(1050f, 1580f, alivePercent);
+                fearMultiplier = Mathf.Lerp(0.002f, 0.0012f, alivePercent);
+                damageMultiplier = Mathf.Lerp(0.0048f, 0.0032f, alivePercent);
             }
 
             if (StartOfRound.Instance.inShipPhase)
@@ -115,12 +126,12 @@ namespace BalanceTweaksPlugin.Patches
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * 0.0016f;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * fearMultiplier;
             }
 
             if (pendingDamageTaken > 0f)
             {
-                stressTimer += pendingDamageTaken * 0.004f;
+                stressTimer += pendingDamageTaken * damageMultiplier;
                 pendingDamageTaken = 0f;
             }
 
