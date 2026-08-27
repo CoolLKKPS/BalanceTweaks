@@ -49,6 +49,9 @@ namespace BalanceTweaksPlugin
 
             harmony.PatchAll();
             Logger.LogInfo("LKKBalanceTweaks is loaded!");
+
+            gameObject.AddComponent<Effects.AudioManager>();
+            gameObject.AddComponent<Effects.StressVignetteEffect>();
 #if DEBUG
             gameObject.AddComponent<DebugTools.StressTimerDebugUI>();
 #endif
