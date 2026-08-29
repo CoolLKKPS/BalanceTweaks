@@ -8,8 +8,8 @@ namespace BalanceTweaksPlugin.Effects
 {
     internal class StressVignetteEffect : MonoBehaviour
     {
-        private const float VignetteIntensity = 0.75f;
-        private const float VignetteSmoothness = 0.45f;
+        private const float VignetteIntensity = 0.85f;
+        private const float VignetteSmoothness = 0.6f;
         private const float CenterExposure = -1f;
         private const float DesaturateThreshold = 0.85f;
         private const float DesaturateSaturation = -100f;
@@ -18,11 +18,9 @@ namespace BalanceTweaksPlugin.Effects
         private const float MinChancePerSecond = 0.01f;
         private const float MaxChancePerSecond = 0.2f;
 
-        private const float EpisodeDuration = 10f;
+        private const float EpisodeDuration = 12f;
         private const float CooldownAtThreshold = 60f;
         private const float CooldownAtMaxStress = 30f;
-        private const float FadeInPortion = 0.2f;
-        private const float FadeOutPortion = 0.3f;
 
         private Volume stressVolume;
         private Vignette vignette;
@@ -133,7 +131,6 @@ namespace BalanceTweaksPlugin.Effects
         private void UpdateEpisode(float stress)
         {
             episodeTimer += Time.deltaTime;
-            float progress = Mathf.Clamp01(episodeTimer / episodeDuration);
 
             if (stress > DesaturateThreshold && !desaturateSoundTriggered)
             {
@@ -141,32 +138,9 @@ namespace BalanceTweaksPlugin.Effects
                 audio.PlayDesaturateSound();
             }
 
-            float alpha;
-            if (progress < FadeInPortion)
-            {
-                alpha = Mathf.SmoothStep(0f, 1f, progress / FadeInPortion);
-            }
-            else if (progress > 1f - FadeOutPortion)
-            {
-                float fadeOutProgress = (progress - (1f - FadeOutPortion)) / FadeOutPortion;
-                alpha = 1f - Mathf.SmoothStep(0f, 1f, fadeOutProgress);
-            }
-            else
-            {
-                alpha = 1f;
-            }
-            /*
-            if (stress <= TriggerThreshold && progress > FadeInPortion)
-            {
-                ApplyDepth(alpha, stress);
-                EndEpisode(stress);
-                return;
-            }
-            */
+            ApplyDepth(1f, stress);
 
-            ApplyDepth(alpha, stress);
-
-            if (progress >= 1f)
+            if (episodeTimer >= episodeDuration)
             {
                 EndEpisode(stress);
             }
