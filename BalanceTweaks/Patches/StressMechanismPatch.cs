@@ -8,6 +8,9 @@ namespace BalanceTweaksPlugin.Patches
     internal static class StressMechanismPatch
     {
         private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
+        private const float HealthFactorStartHp = 100f;
+        private const float HealthFactorEndHp = 20f;
+        private const float HealthFactorMax = 1.25f;
         internal static float stressTimer;
         internal static float stressChargeThreshold;
         internal static float SecondsToFullStress;
@@ -98,14 +101,14 @@ namespace BalanceTweaksPlugin.Patches
             if (otherTotal == 0)
             {
                 stressChargeThreshold = player.maxInsanityLevel * 0.02f;
-                SecondsToFullStress = 1080f;
+                SecondsToFullStress = 950f;
                 fearMultiplier = 0.0014f;
                 damageMultiplier = 0.004f;
             }
             else
             {
                 stressChargeThreshold = player.maxInsanityLevel * 0.04f;
-                SecondsToFullStress = Mathf.Lerp(1050f, 1580f, alivePercent);
+                SecondsToFullStress = Mathf.Lerp(792f, 1188f, alivePercent);
                 fearMultiplier = Mathf.Lerp(0.002f, 0.0012f, alivePercent);
                 damageMultiplier = Mathf.Lerp(0.0048f, 0.0032f, alivePercent);
             }
@@ -117,21 +120,23 @@ namespace BalanceTweaksPlugin.Patches
                 return;
             }
 
+            float healthFactor = Mathf.Lerp(1f, HealthFactorMax, Mathf.InverseLerp(HealthFactorStartHp, HealthFactorEndHp, player.health));
+
             if (player.insanityLevel > stressChargeThreshold)
             {
                 // (insanityLevel / (50 - stressChargeThreshold)) / SecondsToFullStress
                 float chargePerSecond = Mathf.InverseLerp(stressChargeThreshold, player.maxInsanityLevel, player.insanityLevel) / SecondsToFullStress;
-                stressTimer += Time.deltaTime * chargePerSecond;
+                stressTimer += Time.deltaTime * chargePerSecond * healthFactor;
             }
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * fearMultiplier;
+                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * fearMultiplier * healthFactor;
             }
 
             if (pendingDamageTaken > 0f)
             {
-                stressTimer += pendingDamageTaken * damageMultiplier;
+                stressTimer += pendingDamageTaken * damageMultiplier * healthFactor;
                 pendingDamageTaken = 0f;
             }
 

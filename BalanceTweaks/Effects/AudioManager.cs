@@ -18,7 +18,11 @@ namespace BalanceTweaksPlugin.Effects
         private const float SoundVolume = 1f;
         private static readonly string[] AudioExtensions = { ".wav", ".ogg", ".mp3" };
 
-        private AudioSource audioSource;
+        private AudioSource blackoutSource;
+        private AudioSource desaturateSource;
+        private AudioSource tinnitusSource;
+        private AudioSource hallucinationSource;
+        private float blackoutTargetVolume = SoundVolume;
         private AudioClip blackoutClip;
         private AudioClip desaturateClip;
         private AudioClip tinnitusClip;
@@ -26,9 +30,10 @@ namespace BalanceTweaksPlugin.Effects
 
         private void Awake()
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-            audioSource.spatialBlend = 0f;
+            blackoutSource = CreateSource();
+            desaturateSource = CreateSource();
+            tinnitusSource = CreateSource();
+            hallucinationSource = CreateSource();
 
             StartCoroutine(LoadClip(BlackoutSoundName, BlackoutFolder, clip => blackoutClip = clip));
             StartCoroutine(LoadClip(DesaturateSoundName, BlackoutFolder, clip => desaturateClip = clip));
@@ -36,31 +41,49 @@ namespace BalanceTweaksPlugin.Effects
             StartCoroutine(LoadHallucinationClips());
         }
 
-        public void PlayBlackoutSound()
+        private void Update()
         {
-            if (blackoutClip == null)
+            if (blackoutSource == null || desaturateSource == null)
                 return;
 
-            audioSource.volume = SoundVolume;
-            audioSource.PlayOneShot(blackoutClip);
+            float current = blackoutSource.volume;
+            float next = Mathf.Lerp(current, blackoutTargetVolume, 5f * Time.deltaTime);
+
+            blackoutSource.volume = next;
+            desaturateSource.volume = next;
+        }
+
+        private AudioSource CreateSource()
+        {
+            var source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.loop = false;
+            source.spatialBlend = 0f;
+            source.volume = SoundVolume;
+            return source;
+        }
+
+        private void PlayOneShot(AudioSource source, AudioClip clip)
+        {
+            if (source == null || clip == null)
+                return;
+
+            source.PlayOneShot(clip);
+        }
+
+        public void PlayBlackoutSound()
+        {
+            PlayOneShot(blackoutSource, blackoutClip);
         }
 
         public void PlayDesaturateSound()
         {
-            if (desaturateClip == null)
-                return;
-
-            audioSource.volume = SoundVolume;
-            audioSource.PlayOneShot(desaturateClip);
+            PlayOneShot(desaturateSource, desaturateClip);
         }
 
         public void PlayTinnitusSound()
         {
-            if (tinnitusClip == null)
-                return;
-
-            audioSource.volume = SoundVolume;
-            audioSource.PlayOneShot(tinnitusClip);
+            PlayOneShot(tinnitusSource, tinnitusClip);
         }
 
         public void PlayHallucinationSound()
@@ -68,8 +91,12 @@ namespace BalanceTweaksPlugin.Effects
             if (hallucinationClips.Count == 0)
                 return;
 
-            audioSource.volume = SoundVolume;
-            audioSource.PlayOneShot(hallucinationClips[Random.Range(0, hallucinationClips.Count)]);
+            PlayOneShot(hallucinationSource, hallucinationClips[Random.Range(0, hallucinationClips.Count)]);
+        }
+
+        public void SetBlackoutSoundsMuted(bool muted)
+        {
+            blackoutTargetVolume = muted ? 0f : SoundVolume;
         }
 
         private IEnumerator LoadClip(string baseName, string subDir, System.Action<AudioClip> onLoaded)

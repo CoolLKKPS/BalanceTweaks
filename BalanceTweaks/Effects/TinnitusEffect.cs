@@ -6,22 +6,25 @@ namespace BalanceTweaksPlugin.Effects
 {
     internal class TinnitusEffect : MonoBehaviour
     {
+        private const float DeafenDecibels = -80f;
+        private const float HallucinationMuteDelay = 5f;
+
         private const float TinnitusThreshold = 0.2f;
-        private const float RampStartStress = 0.2f;
-        private const float RampEndStress = 0.84f;
-        private const float HallucinationThreshold = 0.85f;
+        private const float HallucinationThreshold = 0.65f;
+
+        private const float MinChancePerSecond = 0.01f;
+        private const float MaxChancePerSecond = 0.2f;
 
         private const float CooldownAtThreshold = 60f;
         private const float CooldownAtMaxStress = 30f;
 
-        private const float TinnitusMuteDuration = 5f;
-        private const float HallucinationMuteDuration = 10f;
-
-        private const float DeafenDecibels = -80f;
+        private const float TinnitusDuration = 5f;
+        private const float HallucinationDuration = 10f;
 
         private AudioManager audio;
         private bool tinnitusActive;
-        private float tinnitusRemaining;
+        private float soundRemaining;
+        private float muteDelayRemaining;
         private float cooldownRemaining;
 
         private void Awake()
@@ -31,19 +34,15 @@ namespace BalanceTweaksPlugin.Effects
 
         private void Update()
         {
-            if (!InGameContext())
-            {
-                EndTinnitus();
-                return;
-            }
-
             if (tinnitusActive)
             {
-                tinnitusRemaining -= Time.deltaTime;
-                ApplyMute();
-                if (tinnitusRemaining <= 0f)
+                if (InGameContext())
                 {
-                    EndTinnitus();
+                    UpdateActiveTinnitus();
+                }
+                else
+                {
+                    EndTinnitus(StressMechanismPatch.stressTimer);
                 }
                 return;
             }
@@ -54,11 +53,38 @@ namespace BalanceTweaksPlugin.Effects
                 return;
             }
 
+            if (!InGameContext())
+                return;
+
             float stress = StressMechanismPatch.stressTimer;
             if (stress > TinnitusThreshold)
             {
-                StartTinnitus(stress);
+                float intensity = Mathf.InverseLerp(TinnitusThreshold, 1f, stress);
+                float chance = Mathf.Lerp(MinChancePerSecond, MaxChancePerSecond, intensity) * Time.deltaTime;
+
+                if (Random.value < chance)
+                {
+                    StartTinnitus(stress);
+                }
             }
+        }
+
+        private void OnDisable()
+        {
+            EndTinnitus(StressMechanismPatch.stressTimer);
+        }
+
+        private bool InGameContext()
+        {
+            if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
+                return false;
+
+            if (StartOfRound.Instance == null || StartOfRound.Instance.inShipPhase)
+                return false;
+
+            PlayerControllerB local = GameNetworkManager.Instance != null ? GameNetworkManager.Instance.localPlayerController : null;
+
+            return local != null && !local.isPlayerDead && local.isInsideFactory;
         }
 
         private void StartTinnitus(float stress)
@@ -69,17 +95,35 @@ namespace BalanceTweaksPlugin.Effects
 
             if (hallucination)
             {
-                tinnitusRemaining = HallucinationMuteDuration;
+                soundRemaining = HallucinationDuration;
+                muteDelayRemaining = HallucinationMuteDelay;
                 audio.PlayHallucinationSound();
             }
             else
             {
-                tinnitusRemaining = TinnitusMuteDuration;
+                soundRemaining = TinnitusDuration;
+                muteDelayRemaining = 0f;
                 audio.PlayTinnitusSound();
             }
+        }
 
-            float intensity = Mathf.InverseLerp(RampStartStress, RampEndStress, stress);
-            cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);
+        private void UpdateActiveTinnitus()
+        {
+            soundRemaining -= Time.deltaTime;
+
+            if (muteDelayRemaining > 0f)
+            {
+                muteDelayRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                ApplyMute();
+            }
+
+            if (soundRemaining <= 0f)
+            {
+                EndTinnitus(StressMechanismPatch.stressTimer);
+            }
         }
 
         private void ApplyMute()
@@ -88,6 +132,8 @@ namespace BalanceTweaksPlugin.Effects
             {
                 SoundManager.Instance.SetDiageticMasterVolume(DeafenDecibels);
             }
+
+            audio.SetBlackoutSoundsMuted(true);
 
             if (StartOfRound.Instance == null || GameNetworkManager.Instance == null)
                 return;
@@ -104,13 +150,19 @@ namespace BalanceTweaksPlugin.Effects
             }
         }
 
-        private void EndTinnitus()
+        private void EndTinnitus(float stress)
         {
             if (!tinnitusActive)
                 return;
 
             tinnitusActive = false;
-            tinnitusRemaining = 0f;
+            soundRemaining = 0f;
+            muteDelayRemaining = 0f;
+
+            audio.SetBlackoutSoundsMuted(false);
+
+            float intensity = Mathf.InverseLerp(TinnitusThreshold, 1f, stress);
+            cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);
 
             if (StartOfRound.Instance == null || GameNetworkManager.Instance == null)
                 return;
@@ -125,24 +177,6 @@ namespace BalanceTweaksPlugin.Effects
                     player.currentVoiceChatIngameSettings.voiceAudio.mute = false;
                 }
             }
-        }
-
-        private void OnDisable()
-        {
-            EndTinnitus();
-        }
-
-        private bool InGameContext()
-        {
-            if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
-                return false;
-
-            if (StartOfRound.Instance == null || StartOfRound.Instance.inShipPhase)
-                return false;
-
-            PlayerControllerB local = GameNetworkManager.Instance != null ? GameNetworkManager.Instance.localPlayerController : null;
-
-            return local != null && !local.isPlayerDead && local.isInsideFactory;
         }
     }
 }

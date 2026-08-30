@@ -11,33 +11,64 @@ namespace BalanceTweaksPlugin.Effects
         private const float VignetteIntensity = 0.85f;
         private const float VignetteSmoothness = 0.6f;
         private const float CenterExposure = -1f;
-        private const float DesaturateThreshold = 0.85f;
         private const float DesaturateSaturation = -100f;
 
-        private const float TriggerThreshold = 0.5f;
+        private const float TriggerThreshold = 0.4f;
+        private const float DesaturateThreshold = 0.7f;
+
         private const float MinChancePerSecond = 0.01f;
         private const float MaxChancePerSecond = 0.2f;
 
-        private const float EpisodeDuration = 12f;
         private const float CooldownAtThreshold = 60f;
         private const float CooldownAtMaxStress = 30f;
 
-        private Volume stressVolume;
-        private Vignette vignette;
-        private ColorAdjustments colorAdjustments;
+        private const float BlackoutDuration = 12f;
 
         private AudioManager audio;
         private bool desaturateSoundTriggered;
-
-        private bool episodeActive;
-        private float episodeTimer;
-        private float episodeDuration;
+        private Volume stressVolume;
+        private Vignette vignette;
+        private ColorAdjustments colorAdjustments;
+        private bool blackoutActive;
+        private float blackoutTimer;
+        private float blackoutDuration;
         private float cooldownRemaining;
 
         private void Awake()
         {
             CreateVolume();
             audio = GetComponent<AudioManager>();
+        }
+
+        private void Update()
+        {
+            if (blackoutActive)
+            {
+                if (InGameContext())
+                {
+                    UpdateBlackout(StressMechanismPatch.stressTimer);
+                }
+                else
+                {
+                    EndBlackout(StressMechanismPatch.stressTimer);
+                }
+                return;
+            }
+
+            if (cooldownRemaining > 0f)
+            {
+                cooldownRemaining -= Time.deltaTime;
+                return;
+            }
+
+            if (!InGameContext())
+                return;
+
+            float stress = StressMechanismPatch.stressTimer;
+            if (stress > TriggerThreshold)
+            {
+                TryStartBlackout(stress);
+            }
         }
 
         private void CreateVolume()
@@ -67,37 +98,6 @@ namespace BalanceTweaksPlugin.Effects
             colorAdjustments.saturation.Override(0f);
         }
 
-        private void Update()
-        {
-            if (episodeActive)
-            {
-                if (InGameContext())
-                {
-                    UpdateEpisode(StressMechanismPatch.stressTimer);
-                }
-                else
-                {
-                    EndEpisode(StressMechanismPatch.stressTimer);
-                }
-                return;
-            }
-
-            if (cooldownRemaining > 0f)
-            {
-                cooldownRemaining -= Time.deltaTime;
-                return;
-            }
-
-            if (!InGameContext())
-                return;
-
-            float stress = StressMechanismPatch.stressTimer;
-            if (stress > TriggerThreshold)
-            {
-                TryStartEpisode(stress);
-            }
-        }
-
         private bool InGameContext()
         {
             if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
@@ -106,31 +106,29 @@ namespace BalanceTweaksPlugin.Effects
             if (StartOfRound.Instance == null || StartOfRound.Instance.inShipPhase)
                 return false;
 
-            PlayerControllerB local = GameNetworkManager.Instance != null
-                ? GameNetworkManager.Instance.localPlayerController
-                : null;
+            PlayerControllerB local = GameNetworkManager.Instance != null ? GameNetworkManager.Instance.localPlayerController : null;
 
             return local != null && !local.isPlayerDead && local.isInsideFactory;
         }
 
-        private void TryStartEpisode(float stress)
+        private void TryStartBlackout(float stress)
         {
             float intensity = Mathf.InverseLerp(TriggerThreshold, 1f, stress);
             float chance = Mathf.Lerp(MinChancePerSecond, MaxChancePerSecond, intensity) * Time.deltaTime;
 
             if (Random.value < chance)
             {
-                episodeActive = true;
-                episodeTimer = 0f;
-                episodeDuration = EpisodeDuration;
+                blackoutActive = true;
+                blackoutTimer = 0f;
+                blackoutDuration = BlackoutDuration;
                 desaturateSoundTriggered = false;
                 audio.PlayBlackoutSound();
             }
         }
 
-        private void UpdateEpisode(float stress)
+        private void UpdateBlackout(float stress)
         {
-            episodeTimer += Time.deltaTime;
+            blackoutTimer += Time.deltaTime;
 
             if (stress > DesaturateThreshold && !desaturateSoundTriggered)
             {
@@ -140,9 +138,9 @@ namespace BalanceTweaksPlugin.Effects
 
             ApplyDepth(1f, stress);
 
-            if (episodeTimer >= episodeDuration)
+            if (blackoutTimer >= blackoutDuration)
             {
-                EndEpisode(stress);
+                EndBlackout(stress);
             }
         }
 
@@ -154,12 +152,12 @@ namespace BalanceTweaksPlugin.Effects
             stressVolume.weight = 1f;
         }
 
-        private void EndEpisode(float stress)
+        private void EndBlackout(float stress)
         {
-            if (!episodeActive)
+            if (!blackoutActive)
                 return;
 
-            episodeActive = false;
+            blackoutActive = false;
             vignette.intensity.Override(0f);
             colorAdjustments.postExposure.Override(0f);
             colorAdjustments.saturation.Override(0f);
