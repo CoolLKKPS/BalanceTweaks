@@ -52,6 +52,7 @@ namespace BalanceTweaksPlugin
 
             gameObject.AddComponent<Effects.AudioManager>();
             gameObject.AddComponent<Effects.StressVignetteEffect>();
+            gameObject.AddComponent<Effects.DesaturateEffect>();
             gameObject.AddComponent<Effects.TinnitusEffect>();
 #if DEBUG
             gameObject.AddComponent<DebugTools.StressTimerDebugUI>();

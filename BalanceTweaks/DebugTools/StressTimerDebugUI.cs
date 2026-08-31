@@ -1,6 +1,5 @@
 #if DEBUG
 using BalanceTweaksPlugin.Patches;
-using GameNetcodeStuff;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -105,29 +104,19 @@ namespace BalanceTweaksPlugin.DebugTools
                 return;
             }
 
-            PlayerControllerB localPlayer = GameNetworkManager.Instance != null
-                ? GameNetworkManager.Instance.localPlayerController
-                : null;
-
             float stress = StressMechanismPatch.stressTimer;
-            float threshold = StressMechanismPatch.stressChargeThreshold;
-            float insanity = localPlayer != null ? localPlayer.insanityLevel : 0f;
-            float maxInsanity = localPlayer != null ? localPlayer.maxInsanityLevel : 0f;
+            float locationRate = StressMechanismPatch.currentLocationRate;
             bool inShip = StartOfRound.Instance != null && StartOfRound.Instance.inShipPhase;
             bool modEnabled = BalanceTweaksPlugin.EnableStressMechanism.Value;
-            bool charging = insanity > threshold;
             int playersConnected = StartOfRound.Instance != null ? StartOfRound.Instance.connectedPlayersAmount : -1;
             int playersLiving = StartOfRound.Instance != null ? StartOfRound.Instance.livingPlayers : -1;
 
-            float ratePerSecond = charging ? Mathf.InverseLerp(threshold, maxInsanity, insanity) / StressMechanismPatch.SecondsToFullStress : 0f;
-
             stressText.text = string.Format(
                 "Stress      {0,4:0.00} / 1.00\n" +
-                "Insanity    {1,4:0.0} / {2:0.0}   (charge > {3:0.0})\n" +
-                "Rate        {4,4:0.000} /s\n" +
-                "InShipPhase {5}    ModEnabled {6}\n" +
-                "Players     conn {7,2}  alive {8,2}",
-                stress, insanity, maxInsanity, threshold, ratePerSecond,
+                "LocRate     {1,6:0.00000} /s\n" +
+                "InShipPhase {2}    ModEnabled {3}\n" +
+                "Players     conn {4,2}  alive {5,2}",
+                stress, locationRate,
                 inShip ? "Y" : "N",
                 modEnabled ? "Y" : "N",
                 playersConnected, playersLiving);

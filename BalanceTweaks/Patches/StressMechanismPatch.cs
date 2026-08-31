@@ -11,13 +11,22 @@ namespace BalanceTweaksPlugin.Patches
         private const float HealthFactorStartHp = 100f;
         private const float HealthFactorEndHp = 20f;
         private const float HealthFactorMax = 1.25f;
+
+        private const float SoloShipRate = 0.00025f;
+        private const float SoloOutsideRate = 0.0005f;
+        private const float SoloFactoryRate = 0.001f;
+
+        private const float MultiShipRate = 0.0005f;
+        private const float MultiOutsideRate = 0.001f;
+        private const float MultiFactoryRate = 0.002f;
+        private const float NearOthersRadius = 17f;
+
         internal static float stressTimer;
-        internal static float stressChargeThreshold;
-        internal static float SecondsToFullStress;
         internal static float pendingDamageTaken;
         internal static int otherTotal;
         internal static int otherAlive;
         internal static float alivePercent;
+        internal static float currentLocationRate;
 
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
@@ -35,7 +44,7 @@ namespace BalanceTweaksPlugin.Patches
 
             UpdateStressTimer(player);
 
-            if (player.insanityLevel <= 0f)
+            if (!player.isInsideFactory)
                 return player.sprintMeter;
 
             if (player.isSprinting)
@@ -87,6 +96,26 @@ namespace BalanceTweaksPlugin.Patches
             }
         }
 
+        private static float GetLocationRate(PlayerControllerB player)
+        {
+            bool solo = otherTotal == 0;
+
+            float baseRate;
+            if (player.isInsideFactory)
+                baseRate = solo ? SoloFactoryRate : MultiFactoryRate;
+            else if (player.isInHangarShipRoom)
+                baseRate = solo ? SoloShipRate : MultiShipRate;
+            else
+                baseRate = solo ? SoloOutsideRate : MultiOutsideRate;
+
+            return solo ? baseRate : baseRate * alivePercent;
+        }
+
+        internal static float GetHealthFactor(PlayerControllerB player)
+        {
+            return Mathf.Lerp(1f, HealthFactorMax, Mathf.InverseLerp(HealthFactorStartHp, HealthFactorEndHp, player.health));
+        }
+
         private static void UpdateStressTimer(PlayerControllerB player)
         {
             if (player.isPlayerDead)
@@ -100,15 +129,11 @@ namespace BalanceTweaksPlugin.Patches
 
             if (otherTotal == 0)
             {
-                stressChargeThreshold = player.maxInsanityLevel * 0.02f;
-                SecondsToFullStress = 950f;
                 fearMultiplier = 0.0014f;
                 damageMultiplier = 0.004f;
             }
             else
             {
-                stressChargeThreshold = player.maxInsanityLevel * 0.04f;
-                SecondsToFullStress = Mathf.Lerp(792f, 1188f, alivePercent);
                 fearMultiplier = Mathf.Lerp(0.002f, 0.0012f, alivePercent);
                 damageMultiplier = Mathf.Lerp(0.0048f, 0.0032f, alivePercent);
             }
@@ -120,13 +145,17 @@ namespace BalanceTweaksPlugin.Patches
                 return;
             }
 
-            float healthFactor = Mathf.Lerp(1f, HealthFactorMax, Mathf.InverseLerp(HealthFactorStartHp, HealthFactorEndHp, player.health));
+            float healthFactor = GetHealthFactor(player);
 
-            if (player.insanityLevel > stressChargeThreshold)
+            if (!player.NearOtherPlayers(NearOthersRadius))
             {
-                // (insanityLevel / (50 - stressChargeThreshold)) / SecondsToFullStress
-                float chargePerSecond = Mathf.InverseLerp(stressChargeThreshold, player.maxInsanityLevel, player.insanityLevel) / SecondsToFullStress;
-                stressTimer += Time.deltaTime * chargePerSecond * healthFactor;
+                float locationRate = GetLocationRate(player) * healthFactor;
+                currentLocationRate = locationRate;
+                stressTimer += Time.deltaTime * locationRate;
+            }
+            else
+            {
+                currentLocationRate = 0f;
             }
 
             if (StartOfRound.Instance.fearLevel > 0f)

@@ -11,10 +11,8 @@ namespace BalanceTweaksPlugin.Effects
         private const float VignetteIntensity = 0.85f;
         private const float VignetteSmoothness = 0.6f;
         private const float CenterExposure = -1f;
-        private const float DesaturateSaturation = -100f;
 
         private const float TriggerThreshold = 0.4f;
-        private const float DesaturateThreshold = 0.7f;
 
         private const float MinChancePerSecond = 0.01f;
         private const float MaxChancePerSecond = 0.2f;
@@ -25,7 +23,6 @@ namespace BalanceTweaksPlugin.Effects
         private const float BlackoutDuration = 12f;
 
         private AudioManager audio;
-        private bool desaturateSoundTriggered;
         private Volume stressVolume;
         private Vignette vignette;
         private ColorAdjustments colorAdjustments;
@@ -95,7 +92,7 @@ namespace BalanceTweaksPlugin.Effects
 
             colorAdjustments = profile.Add<ColorAdjustments>(true);
             colorAdjustments.postExposure.Override(0f);
-            colorAdjustments.saturation.Override(0f);
+            colorAdjustments.saturation.overrideState = false;
         }
 
         private bool InGameContext()
@@ -108,7 +105,7 @@ namespace BalanceTweaksPlugin.Effects
 
             PlayerControllerB local = GameNetworkManager.Instance != null ? GameNetworkManager.Instance.localPlayerController : null;
 
-            return local != null && !local.isPlayerDead && local.isInsideFactory;
+            return local != null && !local.isPlayerDead;
         }
 
         private void TryStartBlackout(float stress)
@@ -121,7 +118,6 @@ namespace BalanceTweaksPlugin.Effects
                 blackoutActive = true;
                 blackoutTimer = 0f;
                 blackoutDuration = BlackoutDuration;
-                desaturateSoundTriggered = false;
                 audio.PlayBlackoutSound();
             }
         }
@@ -129,12 +125,6 @@ namespace BalanceTweaksPlugin.Effects
         private void UpdateBlackout(float stress)
         {
             blackoutTimer += Time.deltaTime;
-
-            if (stress > DesaturateThreshold && !desaturateSoundTriggered)
-            {
-                desaturateSoundTriggered = true;
-                audio.PlayDesaturateSound();
-            }
 
             ApplyDepth(1f, stress);
 
@@ -148,7 +138,6 @@ namespace BalanceTweaksPlugin.Effects
         {
             vignette.intensity.Override(VignetteIntensity * alpha);
             colorAdjustments.postExposure.Override(CenterExposure * alpha);
-            colorAdjustments.saturation.Override(stress > DesaturateThreshold ? DesaturateSaturation * alpha : 0f);
             stressVolume.weight = 1f;
         }
 
@@ -160,9 +149,7 @@ namespace BalanceTweaksPlugin.Effects
             blackoutActive = false;
             vignette.intensity.Override(0f);
             colorAdjustments.postExposure.Override(0f);
-            colorAdjustments.saturation.Override(0f);
             stressVolume.weight = 0f;
-            desaturateSoundTriggered = false;
 
             float intensity = Mathf.InverseLerp(TriggerThreshold, 1f, stress);
             cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);

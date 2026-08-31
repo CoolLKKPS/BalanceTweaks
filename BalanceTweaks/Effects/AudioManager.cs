@@ -9,12 +9,12 @@ namespace BalanceTweaksPlugin.Effects
 {
     internal class AudioManager : MonoBehaviour
     {
-        private const string BlackoutFolder = "blackout";
-        private const string TinnitusFolder = "tinnitus";
-        private const string BlackoutSoundName = "blackout";
-        private const string DesaturateSoundName = "desaturate";
-        private const string TinnitusSoundName = "tinnitus";
-        private const string HallucinationPrefix = "hallucination";
+        private const string BasicFolder = "Basic";
+        private const string TinnitusFolder = "Tinnitus";
+        private const string BlackoutSoundName = "Blackout";
+        private const string DesaturateSoundName = "Desaturate";
+        private const string TinnitusSoundName = "Tinnitus";
+        private const string HallucinationPrefix = "Hallucination";
         private const float SoundVolume = 1f;
         private static readonly string[] AudioExtensions = { ".wav", ".ogg", ".mp3" };
 
@@ -35,9 +35,9 @@ namespace BalanceTweaksPlugin.Effects
             tinnitusSource = CreateSource();
             hallucinationSource = CreateSource();
 
-            StartCoroutine(LoadClip(BlackoutSoundName, BlackoutFolder, clip => blackoutClip = clip));
-            StartCoroutine(LoadClip(DesaturateSoundName, BlackoutFolder, clip => desaturateClip = clip));
-            StartCoroutine(LoadClip(TinnitusSoundName, TinnitusFolder, clip => tinnitusClip = clip));
+            StartCoroutine(LoadClip(BlackoutSoundName, BasicFolder, clip => blackoutClip = clip));
+            StartCoroutine(LoadClip(DesaturateSoundName, BasicFolder, clip => desaturateClip = clip));
+            StartCoroutine(LoadClip(TinnitusSoundName, BasicFolder, clip => tinnitusClip = clip));
             StartCoroutine(LoadHallucinationClips());
         }
 

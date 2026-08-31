@@ -84,14 +84,14 @@ namespace BalanceTweaksPlugin.Effects
 
             PlayerControllerB local = GameNetworkManager.Instance != null ? GameNetworkManager.Instance.localPlayerController : null;
 
-            return local != null && !local.isPlayerDead && local.isInsideFactory;
+            return local != null && !local.isPlayerDead;
         }
 
         private void StartTinnitus(float stress)
         {
             tinnitusActive = true;
 
-            bool hallucination = stress >= HallucinationThreshold && Random.value < 0.5f;
+            bool hallucination = stress >= HallucinationThreshold && IsInsideFactory() && Random.value < 0.5f;
 
             if (hallucination)
             {
@@ -148,6 +148,11 @@ namespace BalanceTweaksPlugin.Effects
                     player.currentVoiceChatIngameSettings.voiceAudio.mute = true;
                 }
             }
+        }
+
+        private static bool IsInsideFactory()
+        {
+            return GameNetworkManager.Instance != null && GameNetworkManager.Instance.localPlayerController != null && GameNetworkManager.Instance.localPlayerController.isInsideFactory;
         }
 
         private void EndTinnitus(float stress)
