@@ -20,6 +20,7 @@ namespace BalanceTweaksPlugin.Patches
         private const float MultiOutsideRate = 0.001f;
         private const float MultiFactoryRate = 0.002f;
         private const float NearOthersRadius = 17f;
+        private const float CompanionshipMultiplier = 0.5f;
 
         internal static float stressTimer;
         internal static float pendingDamageTaken;
@@ -147,16 +148,10 @@ namespace BalanceTweaksPlugin.Patches
 
             float healthFactor = GetHealthFactor(player);
 
-            if (!player.NearOtherPlayers(NearOthersRadius))
-            {
-                float locationRate = GetLocationRate(player) * healthFactor;
-                currentLocationRate = locationRate;
-                stressTimer += Time.deltaTime * locationRate;
-            }
-            else
-            {
-                currentLocationRate = 0f;
-            }
+            float companionshipMultiplier = player.NearOtherPlayers(NearOthersRadius) ? CompanionshipMultiplier : 1f;
+            float locationRate = GetLocationRate(player) * healthFactor * companionshipMultiplier;
+            currentLocationRate = locationRate;
+            stressTimer += Time.deltaTime * locationRate;
 
             if (StartOfRound.Instance.fearLevel > 0f)
             {

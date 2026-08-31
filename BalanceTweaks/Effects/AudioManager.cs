@@ -10,7 +10,7 @@ namespace BalanceTweaksPlugin.Effects
     internal class AudioManager : MonoBehaviour
     {
         private const string BasicFolder = "Basic";
-        private const string TinnitusFolder = "Tinnitus";
+        private const string HallucinationFolder = "Hallucination";
         private const string BlackoutSoundName = "Blackout";
         private const string DesaturateSoundName = "Desaturate";
         private const string TinnitusSoundName = "Tinnitus";
@@ -130,7 +130,7 @@ namespace BalanceTweaksPlugin.Effects
 
         private IEnumerator LoadHallucinationClips()
         {
-            string dir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "assets", TinnitusFolder);
+            string dir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "assets", HallucinationFolder);
 
             if (!Directory.Exists(dir))
             {
