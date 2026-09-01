@@ -12,13 +12,14 @@ namespace BalanceTweaksPlugin.Patches
         private const float HealthFactorEndHp = 20f;
         private const float HealthFactorMax = 1.25f;
 
-        private const float SoloShipRate = 0.00025f;
-        private const float SoloOutsideRate = 0.0005f;
-        private const float SoloFactoryRate = 0.001f;
+        private const float SoloShipRate = 0.000416f;
+        private const float SoloOutsideRate = 0.000625f;
+        private const float SoloFactoryRate = 0.000833f;
 
-        private const float MultiShipRate = 0.0005f;
-        private const float MultiOutsideRate = 0.001f;
-        private const float MultiFactoryRate = 0.002f;
+        private const float MultiShipRate = 0.000625f;
+        private const float MultiOutsideRate = 0.000938f;
+        private const float MultiFactoryRate = 0.00125f;
+
         private const float NearOthersRadius = 17f;
         private const float CompanionshipMultiplier = 0.5f;
 
@@ -130,13 +131,13 @@ namespace BalanceTweaksPlugin.Patches
 
             if (otherTotal == 0)
             {
-                fearMultiplier = 0.0014f;
-                damageMultiplier = 0.004f;
+                fearMultiplier = 0.001f;
+                damageMultiplier = 0.0015f;
             }
             else
             {
-                fearMultiplier = Mathf.Lerp(0.002f, 0.0012f, alivePercent);
-                damageMultiplier = Mathf.Lerp(0.0048f, 0.0032f, alivePercent);
+                fearMultiplier = Mathf.Lerp(0.0015f, 0.00075f, alivePercent);
+                damageMultiplier = Mathf.Lerp(0.001875f, 0.001125f, alivePercent);
             }
 
             if (StartOfRound.Instance.inShipPhase)
