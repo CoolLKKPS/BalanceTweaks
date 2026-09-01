@@ -10,14 +10,16 @@ namespace BalanceTweaksPlugin.Patches
         private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
         private const float HealthFactorStartHp = 100f;
         private const float HealthFactorEndHp = 20f;
-        private const float HealthFactorMax = 1.25f;
+        private const float HealthFactorMax = 1.2f;
+
+        private const float FearMaxMultiplier = 1.2f;
 
         private const float SoloShipRate = 0.000416f;
         private const float SoloOutsideRate = 0.000625f;
         private const float SoloFactoryRate = 0.000833f;
 
         private const float MultiShipRate = 0.000625f;
-        private const float MultiOutsideRate = 0.000938f;
+        private const float MultiOutsideRate = 0.000937f;
         private const float MultiFactoryRate = 0.00125f;
 
         private const float NearOthersRadius = 17f;
@@ -33,7 +35,19 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
         {
+            UpdateStress(__instance);
             __instance.sprintMeter = GetEffectiveSprintMeter(__instance);
+        }
+
+        internal static void UpdateStress(PlayerControllerB player)
+        {
+            if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
+                return;
+
+            if (player != GameNetworkManager.Instance.localPlayerController)
+                return;
+
+            UpdateStressTimer(player);
         }
 
         internal static float GetEffectiveSprintMeter(PlayerControllerB player)
@@ -43,8 +57,6 @@ namespace BalanceTweaksPlugin.Patches
 
             if (player != GameNetworkManager.Instance.localPlayerController)
                 return player.sprintMeter;
-
-            UpdateStressTimer(player);
 
             if (!player.isInsideFactory)
                 return player.sprintMeter;
@@ -126,17 +138,14 @@ namespace BalanceTweaksPlugin.Patches
             otherTotal = StartOfRound.Instance.connectedPlayersAmount;
             otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
             alivePercent = otherTotal > 0 ? Mathf.Clamp01((float)otherAlive / otherTotal) : 0f;
-            float fearMultiplier;
             float damageMultiplier;
 
             if (otherTotal == 0)
             {
-                fearMultiplier = 0.001f;
                 damageMultiplier = 0.0015f;
             }
             else
             {
-                fearMultiplier = Mathf.Lerp(0.0015f, 0.00075f, alivePercent);
                 damageMultiplier = Mathf.Lerp(0.001875f, 0.001125f, alivePercent);
             }
 
@@ -149,15 +158,11 @@ namespace BalanceTweaksPlugin.Patches
 
             float healthFactor = GetHealthFactor(player);
 
+            float fearMultiplier = Mathf.Lerp(1f, FearMaxMultiplier, Mathf.Clamp01(StartOfRound.Instance.fearLevel));
             float companionshipMultiplier = player.NearOtherPlayers(NearOthersRadius) ? CompanionshipMultiplier : 1f;
-            float locationRate = GetLocationRate(player) * healthFactor * companionshipMultiplier;
+            float locationRate = GetLocationRate(player) * fearMultiplier * healthFactor * companionshipMultiplier;
             currentLocationRate = locationRate;
             stressTimer += Time.deltaTime * locationRate;
-
-            if (StartOfRound.Instance.fearLevel > 0f)
-            {
-                stressTimer += Time.deltaTime * StartOfRound.Instance.fearLevel * fearMultiplier * healthFactor;
-            }
 
             if (pendingDamageTaken > 0f)
             {

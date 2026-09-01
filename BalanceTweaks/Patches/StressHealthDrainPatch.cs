@@ -22,7 +22,7 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(PlayerControllerB __instance)
         {
-            if (!BalanceTweaksPlugin.EnableStressHealthDrain.Value)
+            if (!BalanceTweaksPlugin.EnableStressMechanism.Value || !BalanceTweaksPlugin.EnableStressHealthDrain.Value)
                 return;
 
             if (__instance != GameNetworkManager.Instance.localPlayerController)
