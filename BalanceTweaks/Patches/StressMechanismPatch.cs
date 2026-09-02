@@ -10,20 +10,21 @@ namespace BalanceTweaksPlugin.Patches
         private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
         private const float HealthFactorStartHp = 100f;
         private const float HealthFactorEndHp = 20f;
-        private const float HealthFactorMax = 1.2f;
 
-        private const float FearMaxMultiplier = 1.2f;
+        private const float HealthFactorMultiplier = 0.2f;
+        private const float FearFactorMultiplier = 0.2f;
 
-        private const float SoloShipRate = 0.000416f;
-        private const float SoloOutsideRate = 0.000625f;
-        private const float SoloFactoryRate = 0.000833f;
+        private const float SoloShipRate = 0.000462f;
+        private const float SoloOutsideRate = 0.000694f;
+        private const float SoloFactoryRate = 0.000925f;
 
-        private const float MultiShipRate = 0.000625f;
-        private const float MultiOutsideRate = 0.000937f;
-        private const float MultiFactoryRate = 0.00125f;
+        private const float MultiShipRate = 0.000694f;
+        private const float MultiOutsideRate = 0.001041f;
+        private const float MultiFactoryRate = 0.001388f;
 
         private const float NearOthersRadius = 17f;
         private const float CompanionshipMultiplier = 0.5f;
+        private const float PlayerFactorMultiplier = 1.25f;
 
         internal static float stressTimer;
         internal static float pendingDamageTaken;
@@ -110,24 +111,44 @@ namespace BalanceTweaksPlugin.Patches
             }
         }
 
+        [HarmonyPatch(typeof(LungProp), "EquipItem")]
+        internal static class ApparatusPulledPatch
+        {
+            private const float PullStressGain = 0.05f;
+
+            [HarmonyPrefix]
+            private static void Prefix(LungProp __instance)
+            {
+                if (!BalanceTweaksPlugin.EnableStressMechanism.Value)
+                    return;
+
+                if (!__instance.isLungDocked)
+                    return;
+
+                PlayerControllerB localPlayer = GameNetworkManager.Instance.localPlayerController;
+                if (localPlayer == null || localPlayer.isPlayerDead)
+                    return;
+
+                stressTimer = Mathf.Min(1f, stressTimer + PullStressGain);
+            }
+        }
+
         private static float GetLocationRate(PlayerControllerB player)
         {
             bool solo = otherTotal == 0;
 
-            float baseRate;
             if (player.isInsideFactory)
-                baseRate = solo ? SoloFactoryRate : MultiFactoryRate;
-            else if (player.isInHangarShipRoom)
-                baseRate = solo ? SoloShipRate : MultiShipRate;
-            else
-                baseRate = solo ? SoloOutsideRate : MultiOutsideRate;
+                return solo ? SoloFactoryRate : MultiFactoryRate;
 
-            return solo ? baseRate : baseRate * alivePercent;
+            if (player.isInHangarShipRoom)
+                return solo ? SoloShipRate : MultiShipRate;
+
+            return solo ? SoloOutsideRate : MultiOutsideRate;
         }
 
         internal static float GetHealthFactor(PlayerControllerB player)
         {
-            return Mathf.Lerp(1f, HealthFactorMax, Mathf.InverseLerp(HealthFactorStartHp, HealthFactorEndHp, player.health));
+            return Mathf.Lerp(0f, HealthFactorMultiplier, Mathf.InverseLerp(HealthFactorStartHp, HealthFactorEndHp, player.health));
         }
 
         private static void UpdateStressTimer(PlayerControllerB player)
@@ -138,15 +159,16 @@ namespace BalanceTweaksPlugin.Patches
             otherTotal = StartOfRound.Instance.connectedPlayersAmount;
             otherAlive = StartOfRound.Instance.livingPlayers - (player.isPlayerDead ? 0 : 1);
             alivePercent = otherTotal > 0 ? Mathf.Clamp01((float)otherAlive / otherTotal) : 0f;
+            bool solo = otherTotal == 0;
             float damageMultiplier;
 
-            if (otherTotal == 0)
+            if (solo)
             {
-                damageMultiplier = 0.0015f;
+                damageMultiplier = 0.001f;
             }
             else
             {
-                damageMultiplier = Mathf.Lerp(0.001875f, 0.001125f, alivePercent);
+                damageMultiplier = Mathf.Lerp(0.0015f, 0.00075f, alivePercent);
             }
 
             if (StartOfRound.Instance.inShipPhase)
@@ -157,16 +179,16 @@ namespace BalanceTweaksPlugin.Patches
             }
 
             float healthFactor = GetHealthFactor(player);
-
-            float fearMultiplier = Mathf.Lerp(1f, FearMaxMultiplier, Mathf.Clamp01(StartOfRound.Instance.fearLevel));
+            float fearFactor = Mathf.Lerp(0f, FearFactorMultiplier, Mathf.Clamp01(StartOfRound.Instance.fearLevel));
+            float playerFactor = solo ? 1f : Mathf.Lerp(PlayerFactorMultiplier, 1f, alivePercent);
             float companionshipMultiplier = player.NearOtherPlayers(NearOthersRadius) ? CompanionshipMultiplier : 1f;
-            float locationRate = GetLocationRate(player) * fearMultiplier * healthFactor * companionshipMultiplier;
+            float locationRate = GetLocationRate(player) * (1f + healthFactor + fearFactor) * playerFactor * companionshipMultiplier;
             currentLocationRate = locationRate;
             stressTimer += Time.deltaTime * locationRate;
 
             if (pendingDamageTaken > 0f)
             {
-                stressTimer += pendingDamageTaken * damageMultiplier * healthFactor;
+                stressTimer += pendingDamageTaken * damageMultiplier * (1f + healthFactor);
                 pendingDamageTaken = 0f;
             }
 
