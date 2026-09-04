@@ -1,5 +1,7 @@
 using GameNetcodeStuff;
 using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BalanceTweaksPlugin.Patches
@@ -26,7 +28,10 @@ namespace BalanceTweaksPlugin.Patches
         private const float CompanionshipMultiplier = 0.5f;
         private const float PlayerFactorMultiplier = 1.15f;
 
-        private const int CompanyLevelID = 3;
+        private static readonly HashSet<string> NoStressLevelSceneNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "CompanyBuilding",
+        };
 
         internal static float stressTimer;
         internal static float pendingDamageTaken;
@@ -135,9 +140,9 @@ namespace BalanceTweaksPlugin.Patches
             }
         }
 
-        private static bool IsCompanyLevel()
+        private static bool IsNoStressLevel()
         {
-            return StartOfRound.Instance != null && StartOfRound.Instance.currentLevel != null && StartOfRound.Instance.currentLevel.levelID == CompanyLevelID;
+            return StartOfRound.Instance != null && StartOfRound.Instance.currentLevel != null && NoStressLevelSceneNames.Contains(StartOfRound.Instance.currentLevel.sceneName);
         }
 
         private static float GetLocationRate(PlayerControllerB player)
@@ -185,7 +190,7 @@ namespace BalanceTweaksPlugin.Patches
                 return;
             }
 
-            if (IsCompanyLevel())
+            if (IsNoStressLevel())
                 return;
 
             float healthFactor = GetHealthFactor(player);
