@@ -13,10 +13,10 @@ namespace BalanceTweaksPlugin.Effects
         private const float HallucinationThreshold = 0.65f;
 
         private const float MinChancePerSecond = 0.01f;
-        private const float MaxChancePerSecond = 0.2f;
+        private const float MaxChancePerSecond = 0.25f;
 
-        private const float CooldownAtThreshold = 60f;
-        private const float CooldownAtMaxStress = 30f;
+        private const float CooldownAtThreshold = 70f;
+        private const float CooldownAtMaxStress = 35f;
 
         private const float TinnitusDuration = 5f;
         private const float HallucinationDuration = 10f;

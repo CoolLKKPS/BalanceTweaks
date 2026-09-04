@@ -15,10 +15,10 @@ namespace BalanceTweaksPlugin.Effects
         private const float TriggerThreshold = 0.4f;
 
         private const float MinChancePerSecond = 0.01f;
-        private const float MaxChancePerSecond = 0.2f;
+        private const float MaxChancePerSecond = 0.225f;
 
-        private const float CooldownAtThreshold = 60f;
-        private const float CooldownAtMaxStress = 30f;
+        private const float CooldownAtThreshold = 80f;
+        private const float CooldownAtMaxStress = 40f;
 
         private const float BlackoutDuration = 12f;
 

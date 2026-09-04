@@ -15,8 +15,8 @@ namespace BalanceTweaksPlugin.Effects
         private const float MinChancePerSecond = 0.01f;
         private const float MaxChancePerSecond = 0.2f;
 
-        private const float CooldownAtThreshold = 60f;
-        private const float CooldownAtMaxStress = 30f;
+        private const float CooldownAtThreshold = 90f;
+        private const float CooldownAtMaxStress = 45f;
 
         private const float DesaturateDuration = 12f;
 

@@ -26,6 +26,8 @@ namespace BalanceTweaksPlugin.Patches
         private const float CompanionshipMultiplier = 0.5f;
         private const float PlayerFactorMultiplier = 1.15f;
 
+        private const int CompanyLevelID = 3;
+
         internal static float stressTimer;
         internal static float pendingDamageTaken;
         internal static int otherTotal;
@@ -133,6 +135,11 @@ namespace BalanceTweaksPlugin.Patches
             }
         }
 
+        private static bool IsCompanyLevel()
+        {
+            return StartOfRound.Instance != null && StartOfRound.Instance.currentLevel != null && StartOfRound.Instance.currentLevel.levelID == CompanyLevelID;
+        }
+
         private static float GetLocationRate(PlayerControllerB player)
         {
             bool solo = otherTotal == 0;
@@ -177,6 +184,9 @@ namespace BalanceTweaksPlugin.Patches
                 pendingDamageTaken = 0f;
                 return;
             }
+
+            if (IsCompanyLevel())
+                return;
 
             float healthFactor = GetHealthFactor(player);
             float fearFactor = Mathf.Lerp(0f, FearFactorMultiplier, Mathf.Clamp01(StartOfRound.Instance.fearLevel));
