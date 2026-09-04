@@ -10,5 +10,9 @@ Flashlight battery below to 1% will trigger UseUpBatteries function which you no
 I also set up some mechanics that the regular player can handle but players who like installing mods with certain a bit advantages can't handle, and I also tried to fix jester ownership issues;<br>
 CreateNetworkPrefab will prevent anyone who don't have this mod, and most things are configurable, but for modpack creator, pls try to remove BepInEx configs.<br>
 
+## Audio Source
+Original game audio - From ZeekerssRBLX game<br>
+LethalResonance audio - From [LethalResonance](https://thunderstore.io/c/lethal-company/p/LethalResonance/LETHALRESONANCE) mod<br>
+
 ## Maintenance
 This mod should need to maintain to make features work, if some value changed, you need to build the mod again or wait me back to work.

@@ -24,7 +24,7 @@ namespace BalanceTweaksPlugin.Patches
 
         private const float NearOthersRadius = 17f;
         private const float CompanionshipMultiplier = 0.5f;
-        private const float PlayerFactorMultiplier = 1.25f;
+        private const float PlayerFactorMultiplier = 1.15f;
 
         internal static float stressTimer;
         internal static float pendingDamageTaken;
@@ -114,7 +114,7 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPatch(typeof(LungProp), "EquipItem")]
         internal static class ApparatusPulledPatch
         {
-            private const float PullStressGain = 0.05f;
+            private const float PullStressGain = 0.04f;
 
             [HarmonyPrefix]
             private static void Prefix(LungProp __instance)
@@ -164,11 +164,11 @@ namespace BalanceTweaksPlugin.Patches
 
             if (solo)
             {
-                damageMultiplier = 0.001f;
+                damageMultiplier = 0.0005f;
             }
             else
             {
-                damageMultiplier = Mathf.Lerp(0.0015f, 0.00075f, alivePercent);
+                damageMultiplier = Mathf.Lerp(0.00075f, 0.000375f, alivePercent);
             }
 
             if (StartOfRound.Instance.inShipPhase)

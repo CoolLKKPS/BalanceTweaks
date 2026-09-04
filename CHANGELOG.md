@@ -1,3 +1,7 @@
+## v1.0.8
+
+- Make stress mechanism more scary, inspired by `Damned 1` gameplay
+
 ## v1.0.7
 
 - I forgot the icon changed

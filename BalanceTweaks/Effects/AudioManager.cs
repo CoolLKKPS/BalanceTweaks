@@ -11,10 +11,10 @@ namespace BalanceTweaksPlugin.Effects
     {
         private const string BasicFolder = "Basic";
         private const string HallucinationFolder = "Hallucination";
+        private const string HallucinationPrefix = "Hallucination";
         private const string BlackoutSoundName = "Blackout";
         private const string DesaturateSoundName = "Desaturate";
         private const string TinnitusSoundName = "Tinnitus";
-        private const string HallucinationPrefix = "Hallucination";
         private const float SoundVolume = 1f;
         private static readonly string[] AudioExtensions = { ".wav", ".ogg", ".mp3" };
 
@@ -22,7 +22,7 @@ namespace BalanceTweaksPlugin.Effects
         private AudioSource desaturateSource;
         private AudioSource tinnitusSource;
         private AudioSource hallucinationSource;
-        private float blackoutTargetVolume = SoundVolume;
+        private float desaturateTargetVolume = SoundVolume;
         private AudioClip blackoutClip;
         private AudioClip desaturateClip;
         private AudioClip tinnitusClip;
@@ -43,14 +43,10 @@ namespace BalanceTweaksPlugin.Effects
 
         private void Update()
         {
-            if (blackoutSource == null || desaturateSource == null)
+            if (desaturateSource == null)
                 return;
 
-            float current = blackoutSource.volume;
-            float next = Mathf.Lerp(current, blackoutTargetVolume, 5f * Time.deltaTime);
-
-            blackoutSource.volume = next;
-            desaturateSource.volume = next;
+            desaturateSource.volume = Mathf.Lerp(desaturateSource.volume, desaturateTargetVolume, 5f * Time.deltaTime);
         }
 
         private AudioSource CreateSource()
@@ -94,9 +90,9 @@ namespace BalanceTweaksPlugin.Effects
             PlayOneShot(hallucinationSource, hallucinationClips[Random.Range(0, hallucinationClips.Count)]);
         }
 
-        public void SetBlackoutSoundsMuted(bool muted)
+        public void SetDesaturateSoundMuted(bool muted)
         {
-            blackoutTargetVolume = muted ? 0f : SoundVolume;
+            desaturateTargetVolume = muted ? 0f : SoundVolume;
         }
 
         private IEnumerator LoadClip(string baseName, string subDir, System.Action<AudioClip> onLoaded)

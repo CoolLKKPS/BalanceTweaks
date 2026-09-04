@@ -61,7 +61,7 @@ namespace BalanceTweaksPlugin
 
         public const string PLUGIN_GUID = "LKKBalanceTweaks";
         public const string PLUGIN_NAME = "LKKBalanceTweaks";
-        public const string PLUGIN_VERSION = "1.0.7";
+        public const string PLUGIN_VERSION = "1.0.8";
         public const string PLUGIN_VERSION_FULL = PLUGIN_VERSION + ".0";
 
         private readonly Harmony harmony = new Harmony(PLUGIN_GUID);

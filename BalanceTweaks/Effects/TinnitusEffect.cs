@@ -133,7 +133,7 @@ namespace BalanceTweaksPlugin.Effects
                 SoundManager.Instance.SetDiageticMasterVolume(DeafenDecibels);
             }
 
-            audio.SetBlackoutSoundsMuted(true);
+            audio.SetDesaturateSoundMuted(true);
 
             if (StartOfRound.Instance == null || GameNetworkManager.Instance == null)
                 return;
@@ -164,7 +164,7 @@ namespace BalanceTweaksPlugin.Effects
             soundRemaining = 0f;
             muteDelayRemaining = 0f;
 
-            audio.SetBlackoutSoundsMuted(false);
+            audio.SetDesaturateSoundMuted(false);
 
             float intensity = Mathf.InverseLerp(TinnitusThreshold, 1f, stress);
             cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);
