@@ -1,3 +1,7 @@
+## v1.0.9
+
+- Balance
+
 ## v1.0.8
 
 - Make stress mechanism more scary, inspired by `Damned 1` gameplay
