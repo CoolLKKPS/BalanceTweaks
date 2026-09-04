@@ -129,6 +129,7 @@ namespace BalanceTweaksPlugin.Effects
             hallucinationActive = false;
             colorAdjustments.saturation.Override(0f);
             desaturateVolume.weight = 0f;
+            audio.StopDesaturateSound();
 
             float intensity = Mathf.InverseLerp(TriggerThreshold, 1f, stress);
             cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);

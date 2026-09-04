@@ -90,6 +90,34 @@ namespace BalanceTweaksPlugin.Effects
             PlayOneShot(hallucinationSource, hallucinationClips[Random.Range(0, hallucinationClips.Count)]);
         }
 
+        private void StopOneShot(AudioSource source)
+        {
+            if (source == null)
+                return;
+
+            source.Stop();
+        }
+
+        public void StopBlackoutSound()
+        {
+            StopOneShot(blackoutSource);
+        }
+
+        public void StopDesaturateSound()
+        {
+            StopOneShot(desaturateSource);
+        }
+
+        public void StopTinnitusSound()
+        {
+            StopOneShot(tinnitusSource);
+        }
+
+        public void StopHallucinationSound()
+        {
+            StopOneShot(hallucinationSource);
+        }
+
         public void SetDesaturateSoundMuted(bool muted)
         {
             desaturateTargetVolume = muted ? 0f : SoundVolume;

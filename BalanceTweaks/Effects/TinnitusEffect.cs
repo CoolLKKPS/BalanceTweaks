@@ -164,6 +164,8 @@ namespace BalanceTweaksPlugin.Effects
             soundRemaining = 0f;
             muteDelayRemaining = 0f;
 
+            audio.StopTinnitusSound();
+            audio.StopHallucinationSound();
             audio.SetDesaturateSoundMuted(false);
 
             float intensity = Mathf.InverseLerp(TinnitusThreshold, 1f, stress);

@@ -11,6 +11,9 @@ namespace BalanceTweaksPlugin.Patches
         [HarmonyPostfix]
         private static void Postfix(JesterAI __instance)
         {
+            if (!BalanceTweaksPlugin.EnableJesterSpeed.Value)
+                return;
+
             if (__instance.isEnemyDead)
                 return;
 

@@ -22,6 +22,7 @@ namespace BalanceTweaksPlugin
         public static ConfigEntry<bool> EnableKnifeTriggerHit;
         public static ConfigEntry<bool> EnableKnifeLinecastBlock;
         public static ConfigEntry<bool> EnableJesterOwnershipCorrection;
+        public static ConfigEntry<bool> EnableJesterSpeed;
         public static ConfigEntry<bool> EnableStressMechanism;
         public static ConfigEntry<bool> EnableStressHealthDrain;
 
@@ -44,6 +45,7 @@ namespace BalanceTweaksPlugin
             EnableKnifeTriggerHit = Config.Bind("HitDetection", "EnableKnifeTriggerHit", true, "Define whether to allow knife to hit through trigger colliders");
             EnableKnifeLinecastBlock = Config.Bind("HitDetection", "EnableKnifeLinecastBlock", true, "Define whether to change knife linecast queryTriggerInteraction");
             EnableJesterOwnershipCorrection = Config.Bind("Jester", "EnableJesterOwnershipCorrection", true, "Define whether to periodically correct Jester ownership");
+            EnableJesterSpeed = Config.Bind("Jester", "EnableJesterSpeed", true, "Define whether to compute the chase speed on non-owner clients, actually a good nerf");
             EnableStressMechanism = Config.Bind("Stress", "EnableStressMechanism", true, "Define whether to enable stress mechanism");
             EnableStressHealthDrain = Config.Bind("Stress", "EnableStressHealthDrain", true, "Define whether to enable stress health drain");
 

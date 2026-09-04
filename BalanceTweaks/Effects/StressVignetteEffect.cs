@@ -150,6 +150,7 @@ namespace BalanceTweaksPlugin.Effects
             vignette.intensity.Override(0f);
             colorAdjustments.postExposure.Override(0f);
             stressVolume.weight = 0f;
+            audio.StopBlackoutSound();
 
             float intensity = Mathf.InverseLerp(TriggerThreshold, 1f, stress);
             cooldownRemaining = Mathf.Lerp(CooldownAtThreshold, CooldownAtMaxStress, intensity);
