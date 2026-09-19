@@ -37,7 +37,7 @@ namespace BalanceTweaksPlugin.Patches
             if (!__instance.PlayerIsTargetable(player, false, false, true))
                 return;
             // Original code
-            if ((bool)isSeparatedByMineshaftElevator.Invoke(__instance, new object[] { player.transform.position }))
+            if (isSeparatedByMineshaftElevator == null || (bool)isSeparatedByMineshaftElevator.Invoke(__instance, new object[] { player.transform.position }))
                 return;
 
             __instance.ChangeOwnershipOfEnemy(player.actualClientId);

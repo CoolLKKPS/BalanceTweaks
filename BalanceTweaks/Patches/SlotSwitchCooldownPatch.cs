@@ -22,7 +22,7 @@ namespace BalanceTweaksPlugin.Patches
                 return false;
             }
             KnifeItem knife = __instance.currentlyHeldObjectServer as KnifeItem;
-            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
+            if (knife != null && knifeCooldownField != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
             {
                 return false;
             }
@@ -47,7 +47,7 @@ namespace BalanceTweaksPlugin.Patches
                 return false;
             }
             KnifeItem knife = __instance.currentlyHeldObjectServer as KnifeItem;
-            if (knife != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
+            if (knife != null && knifeCooldownField != null && Time.realtimeSinceStartup - (float)knifeCooldownField.GetValue(knife) < KnifeCooldownTime)
             {
                 return false;
             }
