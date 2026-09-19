@@ -8,7 +8,7 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(JesterAI), "OnCollideWithPlayer")]
     internal static class JesterCollisionTransferPatch
     {
-        private static readonly AccessTools.FieldRef<JesterAI, bool> inKillAnimation = AccessTools.FieldRefAccess<JesterAI, bool>("inKillAnimation");
+        private static readonly AccessTools.FieldRef<JesterAI, bool> inKillAnimation = ReflectionHelper.FieldRef<JesterAI, bool>("inKillAnimation");
 
         private static readonly MethodInfo isSeparatedByMineshaftElevator = ReflectionHelper.Method(typeof(EnemyAI), "IsSeparatedByMineshaftElevator");
 
@@ -30,7 +30,7 @@ namespace BalanceTweaksPlugin.Patches
                 return;
             if (player == GameNetworkManager.Instance.localPlayerController)
                 return;
-            if (inKillAnimation(__instance))
+            if (inKillAnimation != null && inKillAnimation(__instance))
                 return;
             if (__instance.stunNormalizedTimer >= 0f)
                 return;

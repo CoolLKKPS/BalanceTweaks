@@ -27,6 +27,17 @@ namespace BalanceTweaksPlugin
             return getter;
         }
 
+        public static AccessTools.FieldRef<T, V> FieldRef<T, V>(string name)
+        {
+            FieldInfo field = AccessTools.Field(typeof(T), name);
+            WarnIfMissing(field, "field", name, typeof(T));
+            if (field == null)
+            {
+                return null;
+            }
+            return AccessTools.FieldRefAccess<T, V>(name);
+        }
+
         public static FieldInfo Field(Type type, string name, BindingFlags bindingFlags)
         {
             FieldInfo field = type.GetField(name, bindingFlags);
@@ -45,7 +56,7 @@ namespace BalanceTweaksPlugin
         {
             if (member == null)
             {
-                BalanceTweaksPlugin.logger?.LogWarning($"Failed to resolve {kind} '{name}' on '{declaringType?.FullName}'. The related feature will be disabled.");
+                BalanceTweaksPlugin.logger?.LogWarning($"Failed to resolve {kind} '{name}' on '{declaringType.FullName}'. The related feature will be disabled.");
             }
         }
     }

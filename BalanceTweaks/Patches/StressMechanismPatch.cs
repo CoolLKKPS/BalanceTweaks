@@ -9,7 +9,7 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(PlayerControllerB), "Update")]
     internal static class StressMechanismPatch
     {
-        private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = AccessTools.FieldRefAccess<PlayerControllerB, bool>("isWalking");
+        private static readonly AccessTools.FieldRef<PlayerControllerB, bool> isWalking = ReflectionHelper.FieldRef<PlayerControllerB, bool>("isWalking");
         private const float HealthFactorStartHp = 100f;
         private const float HealthFactorEndHp = 20f;
 
@@ -78,7 +78,7 @@ namespace BalanceTweaksPlugin.Patches
             if (player.isMovementHindered > 0)
                 return player.sprintMeter;
 
-            if (!isWalking(player))
+            if (isWalking == null || !isWalking(player))
                 return player.sprintMeter;
 
             float drunknessMultiplier = 1f;
