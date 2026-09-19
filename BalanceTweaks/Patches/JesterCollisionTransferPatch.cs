@@ -10,7 +10,7 @@ namespace BalanceTweaksPlugin.Patches
     {
         private static readonly AccessTools.FieldRef<JesterAI, bool> inKillAnimation = AccessTools.FieldRefAccess<JesterAI, bool>("inKillAnimation");
 
-        private static readonly MethodInfo isSeparatedByMineshaftElevator = AccessTools.Method(typeof(EnemyAI), "IsSeparatedByMineshaftElevator");
+        private static readonly MethodInfo isSeparatedByMineshaftElevator = ReflectionHelper.Method(typeof(EnemyAI), "IsSeparatedByMineshaftElevator");
 
         [HarmonyPostfix]
         private static void Postfix(JesterAI __instance, Collider other)

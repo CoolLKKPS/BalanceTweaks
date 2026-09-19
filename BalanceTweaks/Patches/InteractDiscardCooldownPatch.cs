@@ -9,7 +9,7 @@ namespace BalanceTweaksPlugin.Patches
     {
         private const float KnifeCooldownTime = 0.43f;
 
-        private static readonly FieldInfo knifeCooldownField = AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
+        private static readonly FieldInfo knifeCooldownField = ReflectionHelper.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
         internal static bool IsInCooldown(PlayerControllerB player)
         {

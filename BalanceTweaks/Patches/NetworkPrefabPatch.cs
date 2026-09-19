@@ -1,4 +1,5 @@
 using HarmonyLib;
+using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace BalanceTweaksPlugin.Patches
             var networkObject = prefab.AddComponent<NetworkObject>();
             try
             {
-                var field = typeof(NetworkObject).GetField("GlobalObjectIdHash", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                var field = ReflectionHelper.Field(typeof(NetworkObject), "GlobalObjectIdHash", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (field != null)
                 {
                     uint hash = (uint)BalanceTweaksPlugin.PLUGIN_GUID.GetHashCode();

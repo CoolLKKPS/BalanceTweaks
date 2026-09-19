@@ -9,7 +9,7 @@ namespace BalanceTweaksPlugin.Patches
     [HarmonyPatch(typeof(Shovel), "HitShovel")]
     internal static class ShovelTriggerPatch
     {
-        private static readonly MethodInfo IsTriggerGetter = AccessTools.PropertyGetter(typeof(Collider), "isTrigger");
+        private static readonly MethodInfo IsTriggerGetter = ReflectionHelper.PropertyGetter(typeof(Collider), "isTrigger");
 
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

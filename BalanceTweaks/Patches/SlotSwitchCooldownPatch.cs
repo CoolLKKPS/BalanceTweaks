@@ -11,7 +11,7 @@ namespace BalanceTweaksPlugin.Patches
         private const float KnifeCooldownTime = 0.43f;
 
         private static readonly FieldInfo knifeCooldownField =
-            AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
+            ReflectionHelper.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
         [HarmonyPrefix]
         private static bool Prefix(PlayerControllerB __instance)
@@ -36,7 +36,7 @@ namespace BalanceTweaksPlugin.Patches
         private const float KnifeCooldownTime = 0.43f;
 
         private static readonly FieldInfo knifeCooldownField =
-            AccessTools.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
+            ReflectionHelper.Field(typeof(KnifeItem), "timeAtLastDamageDealt");
 
         [HarmonyPrefix]
         private static bool Prefix(PlayerControllerB __instance)
